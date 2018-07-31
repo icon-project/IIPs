@@ -1,7 +1,7 @@
 ---
 iip: 1
 title: IIP Purpose and Guidelines
-author: Sojin Kim <sojin.kim@icon.foundation>, Jay PARK <jaypark@icon.foundation>, and others
+author: Sojin Kim <sojin.kim@icon.foundation>, and others
 discussions-to: https://github.com/icon-project/IIPs/issues/1
 status: Draft    
 type: Meta
@@ -86,7 +86,7 @@ Each IIP should have the following parts:
 
 ## IIP Formats and Templates
 
-IIPs should be written in [markdown][https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet] format.
+IIPs should be written in [markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) format.
 Image files should be included in a subdirectory of the `assets` folder for that IIP as follow: `assets/iip-X` (for iip **X**). When linking to an image in the IIP, use relative links such as `../assets/iip-X/image.png`.
 
 ## IIP Header Preamble
@@ -179,7 +179,7 @@ If you are interested in assuming ownership of an IIP, send a message asking to 
 
 The current IIP editors are
 
-` * Jonghyup Kim (@extendjh)`
+`* Jonghyup Kim (@extendjh)`
 
 `* Sojin Kim (@sojinkim-icon)`
 
@@ -209,7 +209,7 @@ The editors don't pass judgment on IIPs. We merely do the administrative & edito
 
 ## History
 
-This document was derived heavily from [Ethereum's EIP-1][https://github.com/ethereum/EIPs] which in turn was derived from [Bitcoin's BIP-0001][https://github.com/bitcoin/bips] and [Python's PEP-0001][https://www.python.org/dev/peps/]. In many places text was simply copied and modified. Authors of EIP-1, BIP-0001, and PEP-0001 are not responsible for its use in the ICON Improvement Process, and should not be bothered with technical questions specific to ICON or the IIP. Please direct all comments to the IIP editors.
+This document was derived heavily from [Ethereum's EIP-1](https://github.com/ethereum/EIPs) which in turn was derived from [Bitcoin's BIP-0001](https://github.com/bitcoin/bips) and [Python's PEP-0001](https://www.python.org/dev/peps/). In many places text was simply copied and modified. Authors of EIP-1, BIP-0001, and PEP-0001 are not responsible for its use in the ICON Improvement Process, and should not be bothered with technical questions specific to ICON or the IIP. Please direct all comments to the IIP editors.
 
 July 29, 2018: IIP 1 has been improved and placed as a PR.
 
