@@ -3,7 +3,7 @@ iip: 1
 title: IIP Purpose and Guidelines
 author: Sojin Kim <sojin.kim@icon.foundation>, and others
 discussions-to: https://github.com/icon-project/IIPs/issues/1
-status: Draft    
+status: Active    
 type: Meta
 created: 2018-07-23
 ---
@@ -212,6 +212,8 @@ The editors don't pass judgment on IIPs. We merely do the administrative & edito
 This document was derived heavily from [Ethereum's EIP-1](https://github.com/ethereum/EIPs) which in turn was derived from [Bitcoin's BIP-0001](https://github.com/bitcoin/bips) and [Python's PEP-0001](https://www.python.org/dev/peps/). In many places text was simply copied and modified. Authors of EIP-1, BIP-0001, and PEP-0001 are not responsible for its use in the ICON Improvement Process, and should not be bothered with technical questions specific to ICON or the IIP. Please direct all comments to the IIP editors.
 
 July 29, 2018: IIP 1 has been improved and placed as a PR.
+
+Auguest 1, 2018: Merged to master. 
 
 ## Copyright
 
