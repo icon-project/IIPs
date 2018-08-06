@@ -29,7 +29,7 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 
 | Number             | Title                      | Author    | Type | Status |
 | ------------------ | -------------------------- | --------- | ---- | ------ |
-| [1](IIPS/iip-1.md) | IIP Purpose and Guidelines | Sojin Kim | Meta | Draft  |
+| [1](IIPS/iip-1.md) | IIP Purpose and Guidelines | Sojin Kim | Meta | Active |
 |                    |                            |           |      |        |
 
  
