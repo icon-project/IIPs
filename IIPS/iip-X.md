@@ -2,7 +2,7 @@
 iip: <to be assigned>
 title: ICON Name Service Standard
 author: Phyrex Tsai <phyrex@portal.network>, Portal Network Team
-discussions-to: https://github.com/icon-project/IIPs/issues/1
+discussions-to: https://github.com/icon-project/IIPs/issues/6
 status: Draft    
 type: Standards Track
 category : IRC
@@ -131,7 +131,7 @@ def node(addr: Address) -> str :
 ```
 
 ## References
-- [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
+- [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md)
 
 ## Copyright
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
