@@ -1,12 +1,12 @@
 ---
-iip: <to be assigned>
+iip: 6
 title: ICON Name Service Standard
 author: Phyrex Tsai <phyrex@portal.network>, Portal Network Team
 discussions-to: https://github.com/icon-project/IIPs/issues/6
-status: Draft    
+status: Draft
 type: Standards Track
 category : IRC
-created: 2018-08-06 
+created: 2018-08-06
 ---
 
 ## Abstract
