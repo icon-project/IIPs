@@ -41,8 +41,6 @@ INS resolvers are responsible for performing resources from a domain name, a res
 ### Reverse Resolvers
 INS reverse resolver is a smart contract records that mapping from addresses to names.
 
-## Rationale
-
 ### Registry Smart Contract
 The INS registry contract exposes the following functions:
 
