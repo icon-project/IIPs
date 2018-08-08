@@ -46,31 +46,37 @@ The INS registry contract exposes the following functions:
 
 Returns the owner of the specified node.
 ```python
+@external(readonly=True)
 def owner(node) -> Address: 
 ```
 
 Returns the resolver for the specified node.
 ```python
+@external(readonly=True)
 def resolver(node) -> Address: 
 ```
 
 Returns the time-to-live (TTL) of the `node`; that is, the maximum duration for which a `node`'s information may be cached. 
 ```python
+@external(readonly=True)
 def ttl(node) -> int: 
 ```
 
 Transfers ownership of a `node` to another registrar. And this function may only be called by the current owner of `node`.
 ```python
+@external
 def setOwner(node, owner: Address) : 
 ```
 
 Create a subdomain and the sets its owner to `owner`
 ```python
+@external
 def setSubnodeOwner(node, label, owner: Address) : 
 ```
 
 Sets the resolver address for `node`. And this function may only be called by the owner of `node`.
 ```python
+@external
 def setResolver(node, resolver: Address) : 
 ```
 
@@ -79,6 +85,7 @@ The INS registrar contract exposes the following functions:
 
 Register a name, or change the `owner` of an existing registration.
 ```python
+@external
 def register(node, owner: Address) : 
 ```
 
@@ -87,31 +94,37 @@ The INS resolver contract exposes the following functions:
 
 Sets the hash address for `node`. And this function may only called by the owner of `node`.
 ```python
+@external
 def setAddr(node, addr: Address) : 
 ```
 
 Returns the hash address for the specified node.
 ```python
+@external(readonly=True)
 def addr(node) -> Address : 
 ```
 
 Sets the multihash associated with an INS node.
 ```python
+@external
 def setMultihash(node, hash) : 
 ```
 
 Returns the multihash associated with an INS node.
 ```python
+@external(readonly=True)
 def multihash(node) -> str : 
 ```
 
 Sets the text data associated with an INS node and key.
 ```python
+@external
 def setText(node, text) : 
 ```
 
 Returns the text data associated with an INS node and key.
 ```python
+@external(readonly=True)
 def text(node) : 
 ```
 
@@ -120,11 +133,13 @@ The INS reverse resolver contract exposes the following functions:
 
 Sets the `name` record for the reverse INS record associated with the calling account.
 ```python
+@external
 def setName(name) : 
 ```
 
 Returns the hash for a given address's reverse records.
 ```python
+@external(readonly=True)
 def node(addr: Address) -> str : 
 ```
 
