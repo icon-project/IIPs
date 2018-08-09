@@ -1,5 +1,5 @@
 ---
-iip: <to be assigned>
+iip: 2
 title: ICON Token Standard
 author: Jaechang Namgoong (@sink772)
 discussions-to: https://github.com/icon-project/IIPs/issues/2
