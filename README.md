@@ -30,6 +30,6 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | Number             | Title                      | Author    | Type | Status |
 | ------------------ | -------------------------- | --------- | ---- | ------ |
 | [1](IIPS/iip-1.md) | IIP Purpose and Guidelines | Sojin Kim | Meta | Active |
-|                    |                            |           |      |        |
-
+| [2](IIPS/iip-2.md) | ICON Token Standard | Jaechang Namgoong  | IRC | Draft |
+| [6](IIPS/iip-6.md) | ICON Name Service Standard | Phyrex Tsai, Portal Network Team | IRC | Draft |
  
