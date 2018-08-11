@@ -119,13 +119,13 @@ def multihash(node) -> str :
 Sets the text data associated with an INS node and key.
 ```python
 @external
-def setText(node, text) : 
+def setText(node, key, value) : 
 ```
 
 Returns the text data associated with an INS node and key.
 ```python
 @external(readonly=True)
-def text(node) : 
+def text(node, key) : 
 ```
 
 ### Reverse Resolver Smart Contract
@@ -150,7 +150,7 @@ The ICON Name Service has impelement as below.
 
 ### INS Registry Implementation
 
-The INS Registry is 
+The INS Registry is a root storage of the ICON Name Service.
 
 ```python
 class INSRegistry(IconScoreBase):
