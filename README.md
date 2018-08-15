@@ -21,8 +21,9 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 
 # IIP Status Terms
 * **Draft** - an IIP that is open for consideration.
-* **Accepted** - an IIP that is planned for immediate adoption, i.e. expected to be included in the next release (for Core/Consensus layer IIPs).
-* **Final** - an IIP that has been adopted in the mainnet (for Core/Consensus layer IIPs).
+* **Last Call** - an IIP that is calling for last review before finalizaing. IIPs that has been more than 2 weeks in Last Call without any technical changes or objections enters either Accepted or Final state. 
+* **Accepted** - an IIP that is planned for immediate adoption, i.e. expected to be included in the next release (for Core/Consensus layer IIPs only).
+* **Final** - an IIP that has been adopted. For Core/Consensus layer IIPs, the implementation has been adopted in the mainnet.
 * **Deferred** - an IIP that is not being considered for immediate adoption. May be reconsidered in the future.
 
 # IIPs
@@ -30,6 +31,6 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | Number             | Title                      | Author    | Type | Status |
 | ------------------ | -------------------------- | --------- | ---- | ------ |
 | [1](IIPS/iip-1.md) | IIP Purpose and Guidelines | Sojin Kim | Meta | Active |
-| [2](IIPS/iip-2.md) | ICON Token Standard | Jaechang Namgoong  | IRC | Draft |
+| [2](IIPS/iip-2.md) | **ICON Token Standard** | Jaechang Namgoong  | IRC | Last Call - ends 2018-08-28 |
 | [6](IIPS/iip-6.md) | ICON Name Service Standard | Phyrex Tsai, Portal Network Team | IRC | Draft |
  
