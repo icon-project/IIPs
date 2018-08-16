@@ -119,13 +119,13 @@ def multihash(node) -> str :
 Sets the text data associated with an INS node and key.
 ```python
 @external
-def setText(node, text) : 
+def setText(node, key, value) : 
 ```
 
 Returns the text data associated with an INS node and key.
 ```python
 @external(readonly=True)
-def text(node) : 
+def text(node, key) : 
 ```
 
 ### Reverse Resolver Smart Contract
@@ -142,6 +142,9 @@ Returns the hash for a given address's reverse records.
 @external(readonly=True)
 def node(addr: Address) -> str : 
 ```
+
+## Implementation
+Please visit ICON Name Service source code at [https://github.com/PortalNetwork/ins](https://github.com/PortalNetwork/ins).
 
 ## References
 - [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md)
