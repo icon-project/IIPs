@@ -19,7 +19,7 @@ NFTs can represent ownership over digital or physical assets, which can be owned
 ## Motivation
 A standard interface allows wallet/broker/auction applications to work with any NFT on ICON network.
 
-This standard is inspired by the ERC721 token standard. Unlike [IRC2](IIPS/iip-2.md) token standard, where we adopted the token fallback mechanism, we preserved the approve/transferFrom methods in this NFTs standard, because there can not be multiple withdrawals with NFTs as in ERC20 (see [ERC20 API: An Attack Vector on Approve/TransferFrom Methods](https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit)).
+This standard is inspired by the ERC721 token standard. Unlike [IRC2](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-2.md) token standard, where we adopted the token fallback mechanism, we preserved the approve/transferFrom methods in this NFTs standard, because there can not be multiple withdrawals with NFTs as in ERC20 (see [ERC20 API: An Attack Vector on Approve/TransferFrom Methods](https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit)).
 
 ## Specification
 
