@@ -1,5 +1,5 @@
 ---
-iip: <to be assigned>
+iip: 3
 title: ICON Non-Fungible Token Standard
 author: Jaechang Namgoong (@sink772)
 discussions-to: https://github.com/icon-project/IIPs/issues/3
