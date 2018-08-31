@@ -84,7 +84,7 @@ def tokenFallback(self, _from: Address, _value: int, _data: bytes):
 ```
 
 ## Implementation
-* https://github.com/sink772/IRC2-token-starndard
+* https://github.com/sink772/IRC2-token-standard
 
 ## References
 * [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
