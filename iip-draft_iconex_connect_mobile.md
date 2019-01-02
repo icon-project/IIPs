@@ -5,7 +5,7 @@ author: Jeonghwan Ahn (@a1ahn)
 discussions-to: https://github.com/icon-project/IIPs/issues/14
 status: Draft
 type: Standard Track
-category (*only required for Standard Track): IRC
+category : IRC
 created: 2019-01-02
 ---
 
