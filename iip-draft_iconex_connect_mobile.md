@@ -2,7 +2,7 @@
 iip: <to be assigned>
 title: ICONex Connect for Mobile
 author: Jeonghwan Ahn (@a1ahn)
-discussions-to:
+discussions-to: https://github.com/icon-project/IIPs/issues/14
 status: Draft
 type: Standard Track
 category (*only required for Standard Track): IRC
