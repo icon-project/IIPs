@@ -1,5 +1,5 @@
 ---
-iip: <to be assigned>
+iip: 14
 title: ICONex Connect for Mobile
 author: Jeonghwan Ahn (@a1ahn)
 discussions-to: https://github.com/icon-project/IIPs/issues/14
