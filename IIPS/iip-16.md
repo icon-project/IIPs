@@ -147,53 +147,55 @@ def transfer(self, _partition: str, _to: Address, _amount: int, _data: bytes = N
 ### 2. Security Token Standard Interface
 
 ```python
-@abstractmethod
-def setDocument(self, _name: str, _uri: str, _document_hash: str) -> None:
-	pass
+class SecurityTokenStandard(PartiallyFungibleTokenStandard):
 
-@abstractmethod
-def getDocument(self, _name: str) -> dict:
-	pass
+    @abstractmethod
+    def setDocument(self, _name: str, _uri: str, _document_hash: str) -> None:
+        pass
 
-@abstractmethod
-def isControllable(self) -> bool:
-	pass
+    @abstractmethod
+    def getDocument(self, _name: str) -> dict:
+        pass
 
-@abstractmethod
-def isIssuable(self) -> bool:
-	pass
+    @abstractmethod
+    def isControllable(self) -> bool:
+        pass
 
-@abstractmethod
-def issue(self, _partition: str, _owner: Address, _investor: int, _data: bytes) -> 		None:
-    pass
+    @abstractmethod
+    def isIssuable(self) -> bool:
+        pass
 
-@abstractmethod
-def redeem(self, _partition: str, _investor: Address, _amount: int, _data: bytes) -> 	 None:
-    pass
+    @abstractmethod
+    def issue(self, _partition: str, _owner: Address, _investor: int, _data: bytes) -> None:
+        pass
 
-@abstractmethod
-def authorizeOperator(self, _operator: Address) -> None:
-    pass
+    @abstractmethod
+    def redeem(self, _partition: str, _investor: Address, _amount: int, _data: bytes) -> None:
+        pass
 
-@abstractmethod
-def authorizeOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) -> None:
-    pass
+    @abstractmethod
+    def authorizeOperator(self, _operator: Address) -> None:
+        pass
 
-@abstractmethod
-def revokeOperator(self, _operator: Address) -> None:
-    pass
+    @abstractmethod
+    def authorizeOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) -> None:
+        pass
 
-@abstractmethod
-def revokeOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) -> None:
-    pass
+    @abstractmethod
+    def revokeOperator(self, _operator: Address) -> None:
+        pass
 
-@abstractmethod
-def isOperator(self, _operator: Address) -> bool:
-    pass
+    @abstractmethod
+    def revokeOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) -> None:
+        pass
 
-@abstractmethod
-def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) 		-> bool:
-    pass
+    @abstractmethod
+    def isOperator(self, _operator: Address) -> bool:
+        pass
+
+    @abstractmethod
+    def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) 		-> bool:
+        pass
 ```
 
 
