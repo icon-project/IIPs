@@ -61,7 +61,8 @@ class PartiallyFungibleTokenStandard(ABC):
         pass
 
     @abstractmethod
-    def transfer(self, _partition: str, _to: Address, _value: int, _data: bytes) -> None: 		  pass
+    def transfer(self, _partition: str, _to: Address, _value: int, _data: bytes) -> None: 		
+        pass
 ```
 
 
@@ -149,19 +150,19 @@ def transfer(self, _partition: str, _to: Address, _amount: int, _data: bytes = N
 ```python
 @abstractmethod
 def setDocument(self, _name: str, _uri: str, _document_hash: str) -> None:
-	pass
+    pass
 
 @abstractmethod
 def getDocument(self, _name: str) -> dict:
-	pass
+    pass
 
 @abstractmethod
 def isControllable(self) -> bool:
-	pass
+    pass
 
 @abstractmethod
 def isIssuable(self) -> bool:
-	pass
+    pass
 
 @abstractmethod
 def issue(self, _partition: str, _owner: Address, _investor: int, _data: bytes) -> 		None:
