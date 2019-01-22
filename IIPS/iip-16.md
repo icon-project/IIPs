@@ -61,7 +61,8 @@ class PartiallyFungibleTokenStandard(ABC):
         pass
 
     @abstractmethod
-    def transfer(self, _partition: str, _to: Address, _value: int, _data: bytes) -> None: 		  pass
+    def transfer(self, _partition: str, _to: Address, _value: int, _data: bytes) -> None:
+        pass
 ```
 
 
@@ -194,7 +195,7 @@ class SecurityTokenStandard(PartiallyFungibleTokenStandard):
         pass
 
     @abstractmethod
-    def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) 		-> bool:
+    def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Address) -> bool:
         pass
 ```
 
@@ -313,7 +314,7 @@ def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Ad
 ####  
 
 ## Implementaion
-After completing audit process, it will be released officially .
+After completing audit process, it will be released officially.  
 https://repo.theloop.co.kr/sto/icon-sto-standard/tree/master/score
 
 
