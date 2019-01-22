@@ -311,7 +311,7 @@ def isOperatorForPartition(self, _owner: Address, _partition: str, _operator: Ad
 ####  
 
 ## Implementaion
-
+After completing audit process, it will be released officially .
 https://repo.theloop.co.kr/sto/icon-sto-standard/tree/master/score
 
 
