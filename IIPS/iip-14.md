@@ -3,7 +3,7 @@ iip: 14
 title: ICONex Connect for Mobile
 author: Jeonghwan Ahn (@a1ahn)
 discussions-to: https://github.com/icon-project/IIPs/issues/14
-status: Draft
+status: Last Call - ends 2019-02-15
 type: Standard Track
 category : IRC
 created: 2019-01-02
