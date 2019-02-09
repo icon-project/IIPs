@@ -23,7 +23,20 @@ Through this standard, ownership of certain assets can be divided and represente
 ## Motivation
 
 The objective is to securitize and liquidate assets on the ICON block chain, by issuing and managing security tokens.
-The standard supports legal document asserting the rights of tokenized assets on a block chain, partition management with partially fungible tokens in tranche, and interfaces for managing operator privileges.
+The standard supports legal document asserting the rights of tokenized assets on a block chain, partition management with partially fungible tokens in tranche, and interfaces for managing operator privileges. 
+
+## Rationale 
+#### Partition 
+A Partially-Fungible Token allows to attach metadata for a partial balance of a token holder. These partial balances are called partitions, which have an unique name, partial balance of token, etc.
+
+#### Document Management 
+Since security tokens entails rights and oblications either from investor or the issuer, the ability to connect legal documents with the relevant contracts or partitions is importannt.
+
+#### Check for Security Token Transfer
+The transfer of security token may fail for a variety of reasons. The reasons for failure include the identity of the sender and the receiver whether they have passed the KYC or AML procedures, the maximum number of investors, the maximum holding ratio, and the lockup period of transfer. An interface is needed to check whether the security tokens are transferable before the transfer and to return the reason for failures.
+
+#### Token Control by Operator 
+Security tokens may transfer or retrieve tokens and partitions from a regulatory authority or operator with regulatory consent even if they are not holders of the token. For example, if an investor has falsified the KYC/AML, an holder lost a key, or a fraud transaction needs to be restored, operator permission to control the tokens or partitions of other holders is needed.
 
 ## Specification
 
@@ -132,13 +145,23 @@ Returns the partition information of an account with address `_owner`. The infor
 def partitionsOf(self, _owner: Address) -> dict:
 ```
 
-#### transfer
+#### transferByPartition
 
-Transfers or splits `_partition` to a specific account with `_to`. You should call `self.msg.sender` when the `_amount` of the `_partition` is sufficient. The `@eventlog` should be called on `transfer` call. ( See implementation as below). The transfer method can be managed by the operator specified in the *Security Token Standard* below.
+Transfers `_partition` to a specific account with `_to`. You should call `self.msg.sender` when the `_amount` of the `_partition` is sufficient. The `@eventlog` should be called on `transferByPartition` call. ( See implementation as below). The transferByPartition method can be managed by the operator specified in the *Security Token Standard* below.
 
 ```python
 @external
-def transfer(self, _partition: str, _to: Address, _amount: int, _data: bytes = None) -> None:
+def transferByPartition(self, _partition: str, _to: Address, _amount: int, _data: bytes = None) -> None:
+```
+
+#### canTransferByPartition
+
+Returns the reason of failure when partition transfer. Transfers of partition may fail for a number of reasons, such sender or receiver who have not passed the KYC/AML process, users who are in the transfer lockup period, the maximum number of investors has been reached.
+
+
+```python
+@external
+def canTransferByPartition(self, _partition: str, _to: Address, _amount: int, _data: bytes = None) -> str:
 ```
 
 
@@ -205,7 +228,8 @@ class SecurityTokenStandard(PartiallyFungibleTokenStandard):
 
 #### setDocument
 
-Sets information of document identified by the unique with `_name`. Raw documentation is organized in offchain. `_uri` and `_document_hash` are stored in blockchain to prevent forgery and falsification.
+Sets information of document identified by the unique with `_name`. Raw documentation is organized in offchain. `_uri` and `_document_hash` are stored in blockchain to prevent forgery and falsification.  
+Examples of documents may include legal rights, transfer provisions, sales term, etc. in connection with a security type token.
 
 ```python
 @external
