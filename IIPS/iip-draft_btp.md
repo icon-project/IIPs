@@ -2,7 +2,7 @@
 iip: <to be assigned>
 title: ICON BTP Standard
 author: MoonKyu Song (@mksong-icon)
-discussions-to: MoonKyu Song (@mksong-icon)
+discussions-to: https://github.com/icon-project/IIPs/issues/25
 status: Draft
 type: Standard Track
 category: IRC
