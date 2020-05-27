@@ -249,11 +249,11 @@ BTP Message with error reply is composed of the following,
 ###### handleRelayMessage
 ```python
 @external
-def handleRelayMessage(self, _from: str, _msg: str):
+def handleRelayMessage(self, _prev: str, _msg: str):
 ```
 * Params
-  - from: String ( BTP Address of the BMC generates the message )
-  - msg: String ( base64 encoded string of serialized bytes of Relay Message )
+  - _prev: String ( BTP Address of the previous BMC )
+  - _msg: String ( base64 encoded string of serialized bytes of Relay Message )
 * Description:
   - It verifies and decodes the Relay Message with BMV and dispatches BTP
     Messages to registered BSHs.
@@ -262,13 +262,13 @@ def handleRelayMessage(self, _from: str, _msg: str):
 ###### sendMessage
 ```python
 @external
-def sendMessage(self, dst: str, svc: str, sn: int, msg: bytes):
+def sendMessage(self, _to: str, _svc: str, _sn: int, _msg: bytes):
 ```
 * Params
-  - dst: String ( Network Address of destination network )
-  - svc: String ( name of the service )
-  - sn: Integer ( serial number of the message, must be positive )
-  - msg: Bytes ( serialized bytes of Service Message )
+  - _to: String ( Network Address of destination network )
+  - _svc: String ( name of the service )
+  - _sn: Integer ( serial number of the message, must be positive )
+  - _msg: Bytes ( serialized bytes of Service Message )
 * Description:
   - Sends the message to a specific network.
   - Only allowed to be called by registered BSHs.
@@ -276,11 +276,11 @@ def sendMessage(self, dst: str, svc: str, sn: int, msg: bytes):
 ###### addService
 ```python
 @external
-def addService(self, name: str, addr: Address):
+def addService(self, _svc: str, _addr: Address):
 ```
 * Params
-  - name: String (the name of the service)
-  - addr: Address (the address of the smart contract handling the service)
+  - _svc: String (the name of the service)
+  - _addr: Address (the address of the smart contract handling the service)
 * Description:
   - Registers the smart contract for the service.
   - Called by the operator to manage the BTP network.
@@ -288,10 +288,10 @@ def addService(self, name: str, addr: Address):
 ###### removeService
 ```python
 @external
-def removeService(self, name: str):
+def removeService(self, _svc: str):
 ```
 * Params
-  - name: String (the name of the service)
+  - _svc: String (the name of the service)
 * Description:
   - De-registers the smart contract for the service.
   - Called by the operator to manage the BTP network.
@@ -299,11 +299,11 @@ def removeService(self, name: str):
 ###### addVerifier
 ```python
 @external
-def addVerifier(self, net_addr: str, addr: Address):
+def addVerifier(self, _net: str, _addr: Address):
 ```
 * Params
-  - net_addr: String (Network Address of the blockchain )
-  - addr: Address (the address of BMV)
+  - _net: String (Network Address of the blockchain )
+  - _addr: Address (the address of BMV)
 * Description
   - Registers BMV for the network.
   - Called by the operator to manage the BTP network.
@@ -311,10 +311,10 @@ def addVerifier(self, net_addr: str, addr: Address):
 ###### removeVerifier
 ```python
 @external
-def removeVerifier(self, net_addr: str):
+def removeVerifier(self, _net: str):
 ```
 * Params
-  - net_addr: String (Network Address of the blockchain )
+  - _net: String (Network Address of the blockchain )
 * Description
   - De-registers BMV for the network.
   - May fail if it's referred by the link.
@@ -323,10 +323,10 @@ def removeVerifier(self, net_addr: str):
 ###### addLink
 ```python
 @external
-def addLink(self, link: str):
+def addLink(self, _link: str):
 ```
 * Params
-  - link: String (BTP Address of connected BMC)
+  - _link: String (BTP Address of connected BMC)
 * Description
   - If it generates the event related to the link, the relay shall
     handle the event to deliver BTP Message to the BMC.
@@ -340,7 +340,7 @@ def addLink(self, link: str):
 ###### removeLink
 ```python
 @external
-def removeLink(self, link: str):
+def removeLink(self, _link: str):
 ```
 * Params
   - link: String (BTP Address of connected BMC)
@@ -351,11 +351,11 @@ def removeLink(self, link: str):
 ###### addRoute
 ```python
 @external
-def addRoute(self, dst: str, link: str):
+def addRoute(self, _dst: str, _link: str):
 ```
 * Params
-  - dst: String ( BTP Address of the destination BMC )
-  - link: String ( BTP Address of the next BMC for the destination )
+  - _dst: String ( BTP Address of the destination BMC )
+  - _link: String ( BTP Address of the next BMC for the destination )
 * Description:
   - Add route to the BMC.
   - May fail if there more than one BMC for the network.
@@ -364,7 +364,7 @@ def addRoute(self, dst: str, link: str):
 ###### removeRoute
 ```python
 @external
-def removeRoute(self, dst: str):
+def removeRoute(self, _dst: str):
 ```
 * Params
   - dst: String ( BTP Address of the destination BMC )
@@ -438,10 +438,10 @@ def getRoutes(self) -> dict:
 ###### getStatus
 ```python
 @external(readonly=True)
-def getStatus(self, link: str) -> dict:
+def getStatus(self, _link: str) -> dict:
 ```
 * Params
-  - link: String ( BTP Address of the connected BMC )
+  - _link: String ( BTP Address of the connected BMC )
 * Description:
   - Get status of BMC.
   - Used by the relay to resolve next BTP Message to send.
@@ -461,13 +461,13 @@ def getStatus(self, link: str) -> dict:
 ###### Message
 ```python
 @eventlog(indexed=1)
-def Message(self, next: str, seq: int, msg: bytes):
+def Message(self, _next: str, _seq: int, _msg: bytes):
 ```
 * Indexed: 1
 * Params
-  - next: String ( BTP Address of the BMC to handle the message )
-  - seq: Integer ( sequence number of the message from current BMC to the next )
-  - msg: Bytes ( serialized bytes of BTP Message )
+  - _next: String ( BTP Address of the BMC to handle the message )
+  - _seq: Integer ( sequence number of the message from current BMC to the next )
+  - _msg: Bytes ( serialized bytes of BTP Message )
 * Description
   - Sends the message to the next BMC.
   - The relay monitors this event.
@@ -508,7 +508,7 @@ the past block with the proof.
 ###### BMV.handleRelayMessage
 ```python
 @external
-def handleRelayMessage(self, _bmc: str, _from: str, _seq: int, _msg: bytes) -> list:
+def handleRelayMessage(self, _bmc: str, _prev: str, _seq: int, _msg: bytes) -> list:
 ```
 * Description
   - Decodes Relay Messages and process BTP Messages
@@ -516,10 +516,10 @@ def handleRelayMessage(self, _bmc: str, _from: str, _seq: int, _msg: bytes) -> l
     Error Message
   - BTP Messages with old sequence numbers are ignored. A BTP Message contains future sequence number will fail.
 * Params
-  - bmc: String ( BTPAddress of the BMC handling the message )
-  - from: String ( BTPAddress of the BMC generating the message )
-  - seq: Integer ( next sequence number to get a message )
-  - msg: Bytes ( serialized bytes of Relay Message )
+  - _bmc: String ( BTP Address of the BMC handling the message )
+  - _prev: String ( BTP Address of the previous BMC )
+  - _seq: Integer ( next sequence number to get a message )
+  - _msg: Bytes ( serialized bytes of Relay Message )
 * Returns
   - List of serialized bytes of a [BTP Message](#btp-message)
 
@@ -575,25 +575,25 @@ def handleBTPMessage(self, _from: str, _svc: str, _sn: int, _msg: bytes):
   - If it fails, then BMC will generate a BTP Message that includes
     error information, then delivered to the source.
 * Params
-  - from: String ( address of source network )
-  - svc: String ( name of the service )
-  - sn: Integer ( serial number of the message )
-  - msg: Bytes ( serialized bytes of ServiceMessage )
+  - _from: String ( Network Address of source network )
+  - _svc: String ( name of the service )
+  - _sn: Integer ( serial number of the message )
+  - _msg: Bytes ( serialized bytes of ServiceMessage )
 
 ###### handleBTPError
 ```python
 @external
-def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str):
+def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
 ```
 * Description
   - Handle the error on delivering the message.
   - Accept the error only from the BMC.
 * Params
-  - from: String ( BTP Address of BMC that generated the error )
-  - svc: String ( name of the service )
-  - sn: Integer ( serial number of the original message )
-  - code: Integer ( code of the error )
-  - msg: String ( message of the error )
+  - _src: String ( BTP Address of BMC that generated the error )
+  - _svc: String ( name of the service )
+  - _sn: Integer ( serial number of the original message )
+  - _code: Integer ( code of the error )
+  - _msg: String ( message of the error )
 
 
 ### Message delivery flow
@@ -606,12 +606,12 @@ def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str)
 
      | Name    | Type    | Description                                   |
      |:--------|:--------|:----------------------------------------------|
-     | dst_net | String  | Network Address of the destination blockchain |
-     | svc     | String  | Name of the service.                          |
-     | sn      | Integer | Serial number of the message.                 |
-     | msg     | Bytes   | Service message to be delivered.              |
+     | _to     | String  | Network Address of the destination blockchain |
+     | _svc    | String  | Name of the service.                          |
+     | _sn     | Integer | Serial number of the message.                 |
+     | _msg    | Bytes   | Service message to be delivered.              |
 
-   * BMC lookup the destination BMC belonging to *dst_net*.
+   * BMC lookup the destination BMC belonging to *_to*.
      If there is no known BMC to the network, then it will fail.
 
    * BMC builds a BTP Message.
@@ -629,11 +629,11 @@ def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str)
 
    * BMC generates an event with BTP Message.
    
-     | Name | Type    | Description                                |
-     |:-----|:--------|:-------------------------------------------|
-     | next | String  | BTP Address of the next BMC                |
-     | seq  | Integer | Sequence number of the msg to the next BMC |
-     | msg  | Bytes   | Serialized BTP Message                     |
+     | Name  | Type    | Description                                |
+     |:------|:--------|:-------------------------------------------|
+     | _next | String  | BTP Address of the next BMC                |
+     | _seq  | Integer | Sequence number of the msg to the next BMC |
+     | _msg  | Bytes   | Serialized BTP Message                     |
 
 2. The BTP Message Relay(BMR) detects events.
    * Relay detects [BMC.Message](#message) through various ways.
@@ -649,10 +649,10 @@ def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str)
    * Relay calls [BMC.handleRelayMessage](#handlerelaymessage)
      with built Relay Message.
      
-   | Name | Type   | Description                                     |
-   |:-----|:-------|:------------------------------------------------|
-   | prev | String | BTP Address of the previous BMC                 |
-   | msg  | Bytes  | serialized Relay Message including BTP Messages |
+   | Name  | Type   | Description                                     |
+   |:------|:-------|:------------------------------------------------|
+   | _prev | String | BTP Address of the previous BMC                 |
+   | _msg  | Bytes  | serialized Relay Message including BTP Messages |
      
 4. BMC handles Relay Message
 
@@ -661,12 +661,12 @@ def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str)
    * BMC calls [BMV.handleRelayMessage](#bmvhandlerelaymessage)
      to decode Relay Message and gets a list of BTP Messages.
      
-     | Name | Type    | Description                                               |
-     |:-----|:--------|:----------------------------------------------------------|
-     | bmc  | String  | BTP Address of the current BMC                            |
-     | prev | String  | BTP Address of given previous BMC                         |
-     | seq  | Integer | Next sequence number of the BTP Message from previous BMC |
-     | msg  | Bytes   | The Relay Message                                         |
+     | Name  | Type    | Description                                               |
+     |:------|:--------|:----------------------------------------------------------|
+     | _bmc  | String  | BTP Address of the current BMC                            |
+     | _prev | String  | BTP Address of given previous BMC                         |
+     | _seq  | Integer | Next sequence number of the BTP Message from previous BMC |
+     | _msg  | Bytes   | The Relay Message                                         |
 
 5. BMV decodes Relay Message
 
@@ -684,24 +684,24 @@ def handleBTPError(self, _from: str, _svc: str, _sn: int, _code: int, _msg: str)
    * If the destination BMC is the current one, then it locates BSH
      for the service of the BTP Message.
    * Calls [BSH.handleBTPMessage](#handlebtpmessage) if
-     the message has a positive value as *sn*.
+     the message has a positive value as *_sn*.
 
-     | Name | Type    | Description                           |
-     |:-----|:--------|:--------------------------------------|
-     | from | String  | Network Address of the source network |
-     | svc  | String  | Given service name                    |
-     | sn   | Integer | Given serial number                   |
-     | msg  | Bytes   | Given service message                 |
+     | Name  | Type    | Description                           |
+     |:------|:--------|:--------------------------------------|
+     | _from | String  | Network Address of the source network |
+     | _svc  | String  | Given service name                    |
+     | _sn   | Integer | Given serial number                   |
+     | _msg  | Bytes   | Given service message                 |
      
    * Otherwise, it calls [BSH.handleBTPError](#handlebtperror).
    
-     | Name | Type    | Description                                    |
-     |:-----|:--------|:-----------------------------------------------|
-     | from | String  | BTP Address of the BMC that generated the error|
-     | svc  | String  | Given service name                             |
-     | sn   | Integer | Given serial number                            |
-     | code | Integer | Given error code                               |
-     | msg  | String  | Given error message                            |
+     | Name  | Type    | Description                                    |
+     |:------|:--------|:-----------------------------------------------|
+     | _src  | String  | BTP Address of the BMC that generated the error|
+     | _svc  | String  | Given service name                             |
+     | _sn   | Integer | Given serial number                            |
+     | _code | Integer | Given error code                               |
+     | _msg  | String  | Given error message                            |
 
 
 ## Rationale
