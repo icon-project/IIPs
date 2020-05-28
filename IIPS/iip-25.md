@@ -1,17 +1,17 @@
 ---
-iip: <to be assigned>
+iip: 25
 title: ICON BTP Standard
 author: MoonKyu Song (@mksong-icon)
 discussions-to: https://github.com/icon-project/IIPs/issues/25
 status: Draft
-type: Standard Track
+type: Standards Track
 category: IRC
 created: 2020-03-04
 ---
 
 ## Simple Summary
 
-Standard interfaces for contracts used in Blockchain Transmission Protocol(BTP)
+Standard interfaces for contracts used in Blockchain Transmission Protocol (BTP)
 
 ## Abstract
 <!--
@@ -26,37 +26,37 @@ Complex and heavy functions of smart contracts can be shared if they are impleme
 
 BTP Messages from multiple services are delivered to multiple blockchains.
 BTP smart contracts to support multiple services and blockchains.
-BTP Message Center(BMC) is the center of smart contracts.
+BTP Message Center (BMC) is the center of smart contracts.
 
-For each blockchain, BTP Message Verifier(BMV) verifies the relay message and decodes it into standardized messages (BTP Messages).
+For each blockchain, BTP Message Verifier (BMV) verifies the relay message and decodes it into standardized messages (BTP Messages).
 
-For each service, BTP Message Handler(BSH) handles received messages of the service and sends messages through the BTP Message Center(BMC).
+For each service, BTP Message Handler (BSH) handles received messages of the service and sends messages through the BTP Message Center (BMC).
 
 
 ## Specification
 
 ### Terminology
-  
+
 * [Network Address](#network-address)
 
   A string to identify blockchain network
-  
+
 * [BTP Address](#btp-address)
 
   A string of URL for locating an account of the blockchain network
-  
+
 * [Relay Message](#relay-message)
 
   A message that a relay sends to the blockchain.
-  
+
 * [BTP Message](#btp-message)
 
   Standardized messages delivered between different blockchains
 
-* [BTP Message Center(BMC)](#btp-message-center)
+* [BTP Message Center (BMC)](#btp-message-center)
 
   BMC accepts messages from a relay (Relay Messages).
-  A Relay Message contains standardized messages(BTP Messages) and proof of existence for these messages.
+  A Relay Message contains standardized messages (BTP Messages) and proof of existence for these messages.
   Corresponding BMV will verify and decode the Relay Message, then the BMC will process the BTP Messages.
 
   If the destination of the message isn't current BMC, then it's sent to the next BMC to reach its destination.
@@ -64,12 +64,12 @@ For each service, BTP Message Handler(BSH) handles received messages of the serv
   If the message cannot be processed, then it sends an error back to the source.
 
 
-* [BTP Message Verifier(BMV)](#btp-message-verifier)
+* [BTP Message Verifier (BMV)](#btp-message-verifier)
 
   BMV verifies a Relay Message and decodes it into BTP Messages.
 
 
-* [BTP Service Handler(BSH)](#btp-service-handler)
+* [BTP Service Handler (BSH)](#btp-service-handler)
 
   BSH handles BTP Messages of the service. It also sends messages according to different service scenarios.
 
@@ -207,7 +207,7 @@ BTP Message Center is a smart contract that builds BTP Message and sends it to a
 
 #### Send a message
 
-BSH sends a message through [BMC.sendMessage](#sendmessage). It accepts only requests from the registered BTP Service Handler(BSH). If the service name of those requests is not in the service names of the BSH, then it will be rejected.
+BSH sends a message through [BMC.sendMessage](#sendmessage). It accepts only requests from the registered BTP Service Handler (BSH). If the service name of those requests is not in the service names of the BSH, then it will be rejected.
 
 Then it builds a BTP Message from the request.
 1. Decides destination BMC from the given Network Address
@@ -272,7 +272,7 @@ def sendMessage(self, _to: str, _svc: str, _sn: int, _msg: bytes):
 * Description:
   - Sends the message to a specific network.
   - Only allowed to be called by registered BSHs.
-  
+
 ###### addService
 ```python
 @external
@@ -284,7 +284,7 @@ def addService(self, _svc: str, _addr: Address):
 * Description:
   - Registers the smart contract for the service.
   - Called by the operator to manage the BTP network.
-  
+
 ###### removeService
 ```python
 @external
@@ -295,7 +295,7 @@ def removeService(self, _svc: str):
 * Description:
   - De-registers the smart contract for the service.
   - Called by the operator to manage the BTP network.
-  
+
 ###### addVerifier
 ```python
 @external
@@ -307,7 +307,7 @@ def addVerifier(self, _net: str, _addr: Address):
 * Description
   - Registers BMV for the network.
   - Called by the operator to manage the BTP network.
-  
+
 ###### removeVerifier
 ```python
 @external
@@ -319,7 +319,7 @@ def removeVerifier(self, _net: str):
   - De-registers BMV for the network.
   - May fail if it's referred by the link.
   - Called by the operator to manage the BTP network.
-  
+
 ###### addLink
 ```python
 @external
@@ -336,7 +336,7 @@ def addLink(self, _link: str):
     then it fails.
   - Initializes status information for the link.
   - Called by the operator to manage the BTP network.
-    
+
 ###### removeLink
 ```python
 @external
@@ -347,7 +347,7 @@ def removeLink(self, _link: str):
 * Description
   - Removes the link and status information.
   - Called by the operator to manage the BTP network.
-  
+
 ###### addRoute
 ```python
 @external
@@ -360,7 +360,7 @@ def addRoute(self, _dst: str, _link: str):
   - Add route to the BMC.
   - May fail if there more than one BMC for the network.
   - Called by the operator to manage the BTP network.
-  
+
 ###### removeRoute
 ```python
 @external
@@ -371,7 +371,7 @@ def removeRoute(self, _dst: str):
 * Description:
   - Remove route to the BMC.
   - Called by the operator to manage the BTP network.
-  
+
 ##### Read-only methods
 
 ###### getServices
@@ -418,7 +418,7 @@ def getLinks(self) -> list:
   ```json
   [ "btp://0x1.iconee/cx9f8a75111fd611710702e76440ba9adaffef8656" ]
   ```
-  
+
 ###### getRoutes
 ```python
 @external(readonly=True)
@@ -434,7 +434,7 @@ def getRoutes(self) -> dict:
       "btp://0x2.iconee/cx1d6e4decae8160386f4ecbfc7e97a1bc5f74d35b": "btp://0x1.iconee/cx9f8a75111fd611710702e76440ba9adaffef8656"
     }
     ```
-    
+
 ###### getStatus
 ```python
 @external(readonly=True)
@@ -448,14 +448,14 @@ def getStatus(self, _link: str) -> dict:
   - If target is not registered, it will fail.
 * Return
   - The object contains followings fields.
-  
+
     | Field    | Type    | Description                                      |
     |:---------|:--------|:-------------------------------------------------|
     | tx_seq   | Integer | next sequence number of the next sending message |
     | rx_seq   | Integer | next sequence number of the message to receive   |
     | verifier | Object  | status information of the BMV                    |
-  
-  
+
+
 ##### Events
 
 ###### Message
@@ -484,13 +484,13 @@ existence for these BTP Messages.
 For easy verification, it may update trust information for the
 followed events. Most of the implementations may track the hashes of block
 headers.
- 
+
 If the blockchain system provides proof of absence of the
 BTP Messages, then it's enough for the verifier to sustain the last state only.
 It updates the hash only if it sees proof of absence of further
 BTP Messages in the block.
 
-Most blockchain systems don't provide proof of absence for their data, therefore, it is mandatory to 
+Most blockchain systems don't provide proof of absence for their data, therefore, it is mandatory to
 provide methods to verify historical hashes.
 
 Merkle Accumulator can be used for verifying old hashes.
@@ -628,7 +628,7 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
      If there is no route to the destination BMC.
 
    * BMC generates an event with BTP Message.
-   
+
      | Name  | Type    | Description                                |
      |:------|:--------|:-------------------------------------------|
      | _next | String  | BTP Address of the next BMC                |
@@ -638,7 +638,7 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
 2. The BTP Message Relay(BMR) detects events.
    * Relay detects [BMC.Message](#message) through various ways.
    * Relay can confirm that it occurs and it's finalized.
-   
+
 3. BMR gathers proofs
    * Relay gathers proofs of the event(POE)s
      - Proof for the new block
@@ -648,19 +648,19 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
      - New events including the BTP Message.
    * Relay calls [BMC.handleRelayMessage](#handlerelaymessage)
      with built Relay Message.
-     
+
    | Name  | Type   | Description                                     |
    |:------|:-------|:------------------------------------------------|
    | _prev | String | BTP Address of the previous BMC                 |
    | _msg  | Bytes  | serialized Relay Message including BTP Messages |
-     
+
 4. BMC handles Relay Message
 
    * It finds BMV for the network address of the previous BMC.
    * It gets the sequence number of the next message from the source network.
    * BMC calls [BMV.handleRelayMessage](#bmvhandlerelaymessage)
      to decode Relay Message and gets a list of BTP Messages.
-     
+
      | Name  | Type    | Description                                               |
      |:------|:--------|:----------------------------------------------------------|
      | _bmc  | String  | BTP Address of the current BMC                            |
@@ -692,9 +692,9 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
      | _svc  | String  | Given service name                    |
      | _sn   | Integer | Given serial number                   |
      | _msg  | Bytes   | Given service message                 |
-     
+
    * Otherwise, it calls [BSH.handleBTPError](#handlebtperror).
-   
+
      | Name  | Type    | Description                                    |
      |:------|:--------|:-----------------------------------------------|
      | _src  | String  | BTP Address of the BMC that generated the error|
