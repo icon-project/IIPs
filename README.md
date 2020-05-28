@@ -36,4 +36,5 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | [6](IIPS/iip-6.md) | ICON Name Service Standard | Phyrex Tsai, Portal Network Team | IRC | Draft |
 | [14](IIPS/iip-14.md) | ICONex Connect for Mobile | Jeonghwan Ahn | IRC | Final |
 | [16](IIPS/iip-16.md) | ICON Security Token Standard | Patrick Park | IRC | Draft |
+| [25](IIPS/iip-25.md) | ICON BTP Standard | MoonKyu Song | IRC | Draft |
  
