@@ -3,7 +3,7 @@ iip: 1
 title: IIP Purpose and Guidelines
 author: Sojin Kim <sojin.kim@icon.foundation>, and others
 discussions-to: https://github.com/icon-project/IIPs/issues/1
-status: Active    
+status: Active
 type: Meta
 created: 2018-07-23
 ---
@@ -22,10 +22,10 @@ For ICON implementers, IIPs are a convenient way to track the progress of their 
 
 There are three types of IIP:
 
-- A **Standard Track IIP** describes any change that affects most or all ICON implementations, such as a change to the the network protocol, a change in block or transaction validity rules, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using ICON. Furthermore Standard IIPs can be broken down into the following categories. Standards Track IIPs consist of three parts, a design document, implementation, and finally if warranted an update to the formal specification.
+- A **Standard Track IIP** describes any change that affects most or all ICON implementations, such as a change to the network protocol, a change in block or transaction validity rules, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using ICON. Furthermore Standard IIPs can be broken down into the following categories. Standards Track IIPs consist of three parts, a design document, implementation, and finally if warranted an update to the formal specification.
   - **Core** - improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to [“core dev” discussions](https://github.com/icon-project/pm).
-  - **Networking** - includes improvements around p2p communication protocols. 
-  - **Interface** - includes improvements around client API/RPC specifications and standards, and also certain language-level standards. 
+  - **Networking** - includes improvements around p2p communication protocols.
+  - **Interface** - includes improvements around client API/RPC specifications and standards, and also certain language-level standards.
   - **IRC** - application-level standards and conventions, including contract standards such as token standards ([IRC2](https://github.com/icon-project/IIPs/issues/2), [IRC3](https://github.com/icon-project/IIPs/issues/3)).
 - An **Informational IIP** describes an ICON design issue, or provides general guidelines or information to the ICON community, but does not propose a new feature. Informational IIPs do not necessarily represent ICON community consensus or a recommendation, so users and implementers are free to ignore Informational IIPs or follow their advice.
 - A **Meta IIP** describes a process surrounding ICON or proposes a change to (or an event in) a process. Process IIPs are like Standards Track IIPs but apply to areas other than the ICON protocol itself. They may propose an implementation, but not to ICON's codebase; they often require community consensus; unlike Informational IIPs, they are more than recommendations, and users are typically not free to ignore them. Examples include procedures, guidelines, changes to the decision-making process, and changes to the tools or environment used in ICON development. Any meta-IIP is also considered a Process IIP.
@@ -54,7 +54,7 @@ Each status change is requested by the IIP author and reviewed by the IIP editor
 * **Draft** -- Once the first draft has been merged, you may submit follow-up pull requests with further changes to your draft until such point as you believe the IIP to be mature and ready to proceed to the next status. An IIP in draft status must be implemented to be considered for promotion to the next status (ignore this requirement for core IIPs).
   * :arrow_right: Last Call -- If agreeable, the IIP editor will assign Last Call status and set a review end date, normally 14 days later.
   * :x: -- A request for Last Call status will be denied if material changes are still expected to be made to the draft. We hope that IIPs only enter Last Call once, so as to avoid unnecessary noise on the RSS feed. Last Call will be denied if the implementation is not complete and supported by the community.
-* **Last Call** -- This IIP will listed prominently on the https://github.com/icon-project/IIPs.  
+* **Last Call** -- This IIP will listed prominently on the https://github.com/icon-project/IIPs.
   * :x: -- A Last Call which results in material changes or substantial unaddressed complaints will cause the IIP to revert to Draft.
   * :arrow_right: Accepted (Core IIPs only) -- After the review end date, the ICON Core Developers will vote on whether to accept this change. If yes, the status will upgrade to Accepted.
   * :arrow_right: Final (Not core IIPs) -- A successful Last Call without material changes or unaddressed complaints will become Final.
@@ -179,11 +179,11 @@ If you are interested in assuming ownership of an IIP, send a message asking to 
 
 The current IIP editors are
 
-`* Jonghyup Kim (@extendjh)`
-
-`* Sojin Kim (@sojinkim-icon)`
-
 `* Jaechang Namgoong (@sink772)`
+
+`* Chiwon Cho (@goldworm-icon)`
+
+`* Justin Hsiao (@icon2infiniti)`
 
 ## IIP Editor Responsibilities
 
@@ -213,7 +213,9 @@ This document was derived heavily from [Ethereum's EIP-1](https://github.com/eth
 
 July 29, 2018: IIP 1 has been improved and placed as a PR.
 
-Auguest 1, 2018: Merged to master. 
+August 1, 2018: Merged to master.
+
+May 28, 2020: Changed the list of IIP editors.
 
 ## Copyright
 
