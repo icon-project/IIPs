@@ -100,7 +100,7 @@ def Approval(self, _owner: Address, _approved: Address, _tokenId: int):
 ```
 
 ## Implementation
-TBD
+* [ICON IRC3 NFT Token Standard RI](https://github.com/icon2infiniti/Samples/tree/master/IRC3)
 
 ## References
 * [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
