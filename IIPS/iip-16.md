@@ -1,7 +1,7 @@
 ---
 iip: 16
 title: ICON Security Token Standard
-author: Patrick Park (@cordiallys)
+author: Patrick Park (@cordiallys), Justin Hsiao (@icon2infiniti)
 discussions-to: https://github.com/icon-project/IIPs/issues/16
 status: Draft
 type: Standards Track
