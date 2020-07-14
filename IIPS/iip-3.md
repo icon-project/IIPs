@@ -3,8 +3,7 @@ iip: 3
 title: ICON Non-Fungible Token Standard
 author: Jaechang Namgoong (@sink772)
 discussions-to: https://github.com/icon-project/IIPs/issues/3
-status: Last Call
-review-period-end: 2020-07-13
+status: Final
 type: Standards Track
 category: IRC
 created: 2018-08-27

@@ -32,7 +32,7 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | ------------------ | -------------------------- | --------- | ---- | ------ |
 | [1](IIPS/iip-1.md) | IIP Purpose and Guidelines | Sojin Kim | Meta | Active |
 | [2](IIPS/iip-2.md) | ICON Token Standard | Jaechang Namgoong  | IRC | Final |
-| [3](IIPS/iip-3.md) | **ICON Non-Fungible Token Standard** | Jaechang Namgoong  | IRC | **Last Call - ends 2020-07-13** |
+| [3](IIPS/iip-3.md) | ICON Non-Fungible Token Standard | Jaechang Namgoong  | IRC | Final |
 | [6](IIPS/iip-6.md) | ICON Name Service Standard | Phyrex Tsai, Portal Network Team | IRC | Draft |
 | [14](IIPS/iip-14.md) | ICONex Connect for Mobile | Jeonghwan Ahn | IRC | Final |
 | [16](IIPS/iip-16.md) | ICON Security Token Standard | Patrick Park, Justin Hsiao | IRC | Draft |
