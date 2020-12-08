@@ -1,4 +1,4 @@
-# IIPs 
+# IIPs
 ICON Improvement Proposals (IIPs) describe standards for the ICON platform, including core protocol specifications, client APIs, and contract standards.
 
 # Contributing
@@ -21,7 +21,7 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 
 # IIP Status Terms
 * **Draft** - an IIP that is open for consideration.
-* **Last Call** - an IIP that is calling for last review before finalizaing. IIPs that has been more than 2 weeks in Last Call without any technical changes or objections enters either Accepted or Final state. 
+* **Last Call** - an IIP that is calling for last review before finalizing. IIPs that has been more than 2 weeks in Last Call without any technical changes or objections enters either Accepted or Final state.
 * **Accepted** - an IIP that is planned for immediate adoption, i.e. expected to be included in the next release (for Core/Consensus layer IIPs only).
 * **Final** - an IIP that has been adopted. For Core/Consensus layer IIPs, the implementation has been adopted in the mainnet.
 * **Deferred** - an IIP that is not being considered for immediate adoption. May be reconsidered in the future.
@@ -37,4 +37,4 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | [14](IIPS/iip-14.md) | ICONex Connect for Mobile | Jeonghwan Ahn | IRC | Final |
 | [16](IIPS/iip-16.md) | ICON Security Token Standard | Patrick Park, Justin Hsiao | IRC | Draft |
 | [25](IIPS/iip-25.md) | ICON BTP Standard | MoonKyu Song | IRC | Draft |
- 
+| [31](IIPS/iip-31.md) | ICON Multi Token Standard | Jaechang Namgoong | IRC | Draft |
