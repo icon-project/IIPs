@@ -159,7 +159,7 @@ def TransferSingle(self, _operator: Address, _from: Address, _to: Address, _id: 
 #### TransferBatch
 ```python
 @eventlog(indexed=3)
-def TransferBatch(self, _operator: Address, _from: Address, _to: Address, _ids: List[int], _values: List[int]):
+def TransferBatch(self, _operator: Address, _from: Address, _to: Address, _ids: bytes, _values: bytes):
     """
     Must trigger on any successful token transfers, including zero value transfers as well as minting or burning.
     When minting/creating tokens, the `_from` must be set to zero address.
@@ -168,8 +168,10 @@ def TransferBatch(self, _operator: Address, _from: Address, _to: Address, _ids: 
     :param _operator: the address of an account/contract that is approved to make the transfer
     :param _from: the address of the token holder whose balance is decreased
     :param _to: the address of the recipient whose balance is increased
-    :param _ids: IDs of the tokens (order and length must match `_values` list)
-    :param _values: transfer amounts per token (order and length must match `_ids` list)
+    :param _ids: serialized bytes of list for token IDs (order and length must match `_values`)
+    :param _values: serialized bytes of list for transfer amounts per token (order and length must match `_ids`)
+
+    NOTE: RLP (Recursive Length Prefix) would be used for the serialized bytes to represent list type.
     """
 ```
 
