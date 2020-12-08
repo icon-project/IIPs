@@ -1,8 +1,8 @@
 ---
-iip: <to be assigned>
+iip: 31
 title: ICON Multi Token Standard
 author: Jaechang Namgoong (@sink772)
-discussions-to: https://github.com/icon-project/IIPs/issues/<to be assigned>
+discussions-to: https://github.com/icon-project/IIPs/issues/31
 status: Draft
 type: Standards Track
 category: IRC
