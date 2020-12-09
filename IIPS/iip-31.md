@@ -64,13 +64,13 @@ def transferFrom(self, _from: Address, _to: Address, _id: int, _value: int, _dat
     """
     Transfers `_value` amount of an token `_id` from one address to another address,
     and must emit `TransferSingle` event to reflect the balance change.
-    When the transfer is complete, this method must invoke `tokenFallback(Address,Address,int,int,bytes)` in `_to`,
-    if `_to` is a contract. If the `tokenFallback` method is not implemented in `_to` (receiver contract),
+    When the transfer is complete, this method must invoke `onIRC31Received(Address,Address,int,int,bytes)` in `_to`,
+    if `_to` is a contract. If the `onIRC31Received` method is not implemented in `_to` (receiver contract),
     then the transaction must fail and the transfer of tokens should not occur.
     If `_to` is an externally owned address, then the transaction must be sent without trying to execute
-    `tokenFallback` in `_to`.
+    `onIRC31Received` in `_to`.
     Additional `_data` can be attached to this token transaction, and it should be sent unaltered in call
-    to `tokenFallback` in `_to`. `_data` can be empty.
+    to `onIRC31Received` in `_to`. `_data` can be empty.
     Throws unless the caller is the current token holder or the approved address for the token ID.
     Throws if `_from` does not have enough amount to transfer for the token ID.
     Throws if `_to` is the zero address.
@@ -90,14 +90,14 @@ def transferFromBatch(self, _from: Address, _to: Address, _ids: List[int], _valu
     """
     Transfers `_values` amount(s) of token(s) `_ids` from one address to another address,
     and must emit `TransferSingle` or `TransferBatch` event(s) to reflect all the balance changes.
-    When all the transfers are complete, this method must invoke `tokenFallback(Address,Address,int,int,bytes)` or
-    `tokenFallbackBatch(Address,Address,int[],int[],bytes)` in `_to`,
-    if `_to` is a contract. If the `tokenFallback` method is not implemented in `_to` (receiver contract),
+    When all the transfers are complete, this method must invoke `onIRC31Received(Address,Address,int,int,bytes)` or
+    `onIRC31BatchReceived(Address,Address,int[],int[],bytes)` in `_to`,
+    if `_to` is a contract. If the `onIRC31Received` method is not implemented in `_to` (receiver contract),
     then the transaction must fail and the transfers of tokens should not occur.
     If `_to` is an externally owned address, then the transaction must be sent without trying to execute
-    `tokenFallback` in `_to`.
+    `onIRC31Received` in `_to`.
     Additional `_data` can be attached to this token transaction, and it should be sent unaltered in call
-    to `tokenFallback` in `_to`. `_data` can be empty.
+    to `onIRC31Received` in `_to`. `_data` can be empty.
     Throws unless the caller is the current token holder or the approved address for the token IDs.
     Throws if length of `_ids` is not the same as length of `_values`.
     Throws if `_from` does not have enough amount to transfer for any of the token IDs.
@@ -189,12 +189,15 @@ def ApprovalForAll(self, _owner: Address, _operator: Address, _approved: bool):
     """
 ```
 
-### Token Fallbacks
+### Token Receivers
 
-#### tokenFallback
+Smart contracts that want to receive tokens from IRC31-compatible token contracts must implement
+all of the following receiver methods to accept transfers.
+
+#### onIRC31Received
 ```python
 @external
-def tokenFallback(self, _operator: Address, _from: Address, _id: int, _value: int, _data: bytes):
+def onIRC31Received(self, _operator: Address, _from: Address, _id: int, _value: int, _data: bytes):
     """
     A method for handling a single token type transfer, which is called from the multi token contract.
     It works by analogy with the fallback method of the normal transactions and returns nothing.
@@ -208,10 +211,10 @@ def tokenFallback(self, _operator: Address, _from: Address, _id: int, _value: in
     """
 ```
 
-#### tokenFallbackBatch
+#### onIRC31BatchReceived
 ```python
 @external
-def tokenFallbackBatch(self, _operator: Address, _from: Address, _ids: List[int], _values: List[int], _data: bytes):
+def onIRC31BatchReceived(self, _operator: Address, _from: Address, _ids: List[int], _values: List[int], _data: bytes):
     """
     A method for handling multiple token type transfers, which is called from the multi token contract.
     It works by analogy with the fallback method of the normal transactions and returns nothing.
