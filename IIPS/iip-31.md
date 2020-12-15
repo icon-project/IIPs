@@ -228,6 +228,22 @@ def onIRC31BatchReceived(self, _operator: Address, _from: Address, _ids: List[in
     """
 ```
 
+### Metadata Extensions
+
+To provide rich set of asset metadata for a given token, smarts contracts need to implement the following method
+to return an URI that points to a JSON file.
+
+```python
+@external(readonly=True)
+def tokenURI(self, _id: int) -> str:
+    """
+    Returns an URI for a given token ID.
+
+    :param _id: ID of the token
+    :return: the URI string
+    """
+```
+
 ## Implementation
 TBD
 
