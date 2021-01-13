@@ -189,6 +189,20 @@ def ApprovalForAll(self, _owner: Address, _operator: Address, _approved: bool):
     """
 ```
 
+#### URI
+```python
+@eventlog(indexed=1)
+def URI(self, _id: int, _value: str):
+    """
+    Must trigger on any successful URI updates for a token ID.
+    URIs are defined in RFC 3986.
+    The URI MUST point to a JSON file that conforms to the "ERC-1155 Metadata URI JSON Schema".
+
+    :param _id: ID of the token
+    :param _value: the updated URI string
+    """
+```
+
 ### Token Receivers
 
 Smart contracts that want to receive tokens from IRC31-compatible token contracts must implement
