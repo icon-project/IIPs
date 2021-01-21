@@ -196,7 +196,7 @@ def URI(self, _id: int, _value: str):
     """
     Must trigger on any successful URI updates for a token ID.
     URIs are defined in RFC 3986.
-    The URI MUST point to a JSON file that conforms to the "ERC-1155 Metadata URI JSON Schema".
+    The URI must point to a JSON file that conforms to the "ERC-1155 Metadata URI JSON Schema".
 
     :param _id: ID of the token
     :param _value: the updated URI string
@@ -236,8 +236,8 @@ def onIRC31BatchReceived(self, _operator: Address, _from: Address, _ids: List[in
 
     :param _operator: The address which initiated the transfer
     :param _from: the address which previously owned the token
-    :param _ids: the ID of the token being transferred
-    :param _values: the amount of tokens being transferred
+    :param _ids: the list of IDs of each token being transferred (order and length must match `_values` list)
+    :param _values: the list of amounts of each token being transferred (order and length must match `_ids` list)
     :param _data: additional data with no specified format
     """
 ```
