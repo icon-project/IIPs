@@ -38,3 +38,4 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | [16](IIPS/iip-16.md) | ICON Security Token Standard | Patrick Park, Justin Hsiao | IRC | Draft |
 | [25](IIPS/iip-25.md) | ICON BTP Standard | MoonKyu Song | IRC | Draft |
 | [31](IIPS/iip-31.md) | ICON Multi Token Standard | Jaechang Namgoong | IRC | Draft |
+| [35](IIPS/iip-35.md) | ICON BTP Fee Gathering | Heonseung Lee | IRC | Draft |
