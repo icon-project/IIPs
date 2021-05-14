@@ -242,6 +242,64 @@ BTP Message with error reply is composed of the following,
 * src : BTP Address of the BMC.
 * msg : Error Message including error code and message.
 
+#### BMC service message
+
+BMC service message is a BTP message dispatched by BMC.
+
+###### Format
+
+```
+svc: "bmc"
+```
+
+##### BMC Service Message
+
+| Name    | Type   | Description                                            |
+| :------ | :----- | :----------------------------------------------------- |
+| type    | String | type of BMC Service Message (Init, Link, Unlink, Sack) |
+| payload | Bytes  | serialized bytes of Message                            |
+
+##### Init Message
+
+send to given _link on [BMC.addLink](#addlink)
+
+| Name  | Type           | Description                          |
+| :---- | :------------- | :----------------------------------- |
+| links | List of String | list of BTP Address of connected BMC |
+
+BMC could update status of connected BMC to use to resolve route.
+
+##### Link Message
+
+send to all of connected BMC except given _link on [BMC.addLink](#addlink)
+
+| Name | Type   | Description                  |
+| :--- | :----- | :--------------------------- |
+| link | String | BTP Address of connected BMC |
+
+BMC could update status of connected BMC to use to resolve route.
+
+##### Unlink Message
+
+send to all of connected BMC except given _link on [BMC.removeLink](#removelink)
+
+| Name | Type   | Description                  |
+| :--- | :----- | :--------------------------- |
+| link | String | BTP Address of connected BMC |
+
+BMC could update status of connected BMC to use to resolve route.
+
+##### Sack Message
+
+BMC could send to previous BMC on [BMC.handleRelayMessage](#handlerelaymessage) periodically
+
+| Name   | Type    | Description                           |
+| :----- | :------ | :------------------------------------ |
+| height | Integer | Height of BMV                         |
+| seq    | Integer | Sequence of last received BTP Message |
+
+BMC could reject on [BMC.sendMessage](#sendmessage) using above information if necessary.
+
 #### Interface
 
 ##### Writable methods
