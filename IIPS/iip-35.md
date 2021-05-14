@@ -53,7 +53,7 @@ HUB's BMC sends FeeGathering BMC message to each link when certain conditions ar
 
 ##### FeeGathering Message
 
-Send to all of connected BMC on [BMC.sendFeeGatheringMessage](#sendfeegatheringmessage) on HUB
+HUB's [BMC.handleRelayMessage](#handleRelayMessage) logic sends FeeGathering BMC message to each chain according to the policy.
 
 | Name  | Type           | Description                  |
 | ----- | -------------- | ---------------------------- |
