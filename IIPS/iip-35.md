@@ -55,10 +55,10 @@ HUB's BMC sends FeeGathering BMC message to each link when certain conditions ar
 
 HUB's [BMC.handleRelayMessage](#handleRelayMessage) logic sends FeeGathering BMC message to each chain according to the policy.
 
-| Name  | Type           | Description                  |
-| ----- | -------------- | ---------------------------- |
-| _fa   | String         | BTP Address of FeeAggregator |
-| _svcs | List of String | list of name of service      |
+| Name | Type           | Description                  |
+| ---- | -------------- | ---------------------------- |
+| fa   | String         | BTP Address of FeeAggregator |
+| svcs | List of String | list of name of service      |
 
 When BMC receive this message, find the BSH using 'svcs' and then calls [BSH.handleFeeGathering](#handlefeegathering) with '_fa'
 
@@ -84,7 +84,7 @@ def handleFeeGathering(self, _fa: str, _svc: str):
   - Accept the error only from the BMC.
 - Params
   - _fa: String ( BTP Address of Fee Aggregator )
-  - _svc: String of the service
+  - _svc: String ( Name of the service )
 
 ## Implementation
 
