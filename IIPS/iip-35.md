@@ -53,7 +53,7 @@ HUB's BMC sends FeeGathering BMC message to each link when certain conditions ar
 
 ##### FeeGathering Message
 
-Send to all of connected BMC on [BMC.sendFeeGatheringMessage](#sendfeegatheringmessage) on HUB
+HUB's [BMC.handleRelayMessage](#handleRelayMessage) logic sends FeeGathering BMC message to each chain according to the policy.
 
 | Name  | Type           | Description                  |
 | ----- | -------------- | ---------------------------- |
@@ -76,7 +76,7 @@ Interface that processes the logic that transfers the fees stored in the BSH to 
 
 ```
 @external
-def handleFeeGathering(self, _fa: str):
+def handleFeeGathering(self, _fa: str, _svc: str):
 ```
 
 - Description
@@ -84,6 +84,7 @@ def handleFeeGathering(self, _fa: str):
   - Accept the error only from the BMC.
 - Params
   - _fa: String ( BTP Address of Fee Aggregator )
+  - _svc: String of the service
 
 ## Implementation
 
