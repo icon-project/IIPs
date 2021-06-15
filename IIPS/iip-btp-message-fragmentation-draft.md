@@ -32,44 +32,6 @@ so BTP 1.1 implements it only on the ICON BMC.
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current ICON platforms.-->
 
-### Relay
-
-#### Interface
-
-##### segment
-
-```go
-func (s *sender) Segment(rm *module.RelayMessage, height int64) ([]*module.Segment, error)
-```
-
-- Description:
-  - Fragment Relay Message as much as Transaction Limit size.
-
-##### relay
-
-```go
-func (s *sender) Relay(segment *module.Segment) (module.GetResultParam, error)
-```
-
-- Description:
-  - If the RelayMessage size containing Block Proof exceeds the transaction to be transmitted, the RelayMessage is fragmented and delivered according to the size. 
-  - If not exceeded, it is transmitted as a normal RelayMessage.
-- Definition of index
-  - Indicates the sequence of fragment messages.
-  - The first index is total message count * -1
-  - The last index is 0
-
-##### sendFragment
-
-```go
-func (s *sender) sendFragment(rmp *BMCRelayMethodParams, idx int) (module.GetResultParam, error)
-```
-
-- Description:
-  - It indexes the fragmented message separated through the segment and transmits it to the targetchain.
-
-
-
 ### BMC
 
 #### Interface
@@ -85,11 +47,10 @@ void handleFragment(String _prev, String _msg, int _idx);
   - _msg: String (Fragmented base64 encoded string of serialized bytes of Relay Message)
   - _idx: Integer (Index of fragment) 
 - Description:
-  - Concat the BTP messages that come with _idx in the order of _idx.
-  - If _idx < 0, it is determined as the first message, and if _idx == 0, it is determined as the last fragmentaion message.
-    - Eg)
-      - -3, 1, 2, 0
-      - -1, 0
+  - Concat the fragments of the Relay message that come with _idx in the order of _idx.
+  - If _idx is negative, it is determined as the first message,
+    and if _idx is zero, it is determined as the last fragmentaion message.
+    - For example, if the number of fragments is 4, then _idx should be -3, 2, 1, 0 sequentially
   - Instead of verifying each time each fragmentation message is processed, 
     it is assembled and verified when the last fragmentation message arrives.
   - Assemble fragments of the Relay Message and call by BMC::handleRelayMessage.
