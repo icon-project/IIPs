@@ -331,14 +331,24 @@ def sendMessage(self, _to: str, _svc: str, _sn: int, _msg: bytes):
   - Sends the message to a specific network.
   - Only allowed to be called by registered BSHs.
 
-###### addService
+###### requestAddService
 ```python
 @external
-def addService(self, _svc: str, _addr: Address):
+def requestAddService(self, _svc: str, _addr: Address):
 ```
 * Params
   - _svc: String (the name of the service)
   - _addr: Address (the address of the smart contract handling the service)
+* Description:
+  - BSH contract sends a request to add its service name and contract address to BMC
+
+###### approveService
+```python
+@external
+def approveService(self, _svc: str):
+```
+* Params
+  - _svc: String (the name of the service)
 * Description:
   - Registers the smart contract for the service.
   - Called by the operator to manage the BTP network.
