@@ -84,20 +84,21 @@ A string to identify blockchain network
 **Network System**:
 Short name of the blockchain network system.
 
-| Name   | Description          |
-|:-------|:---------------------|
-| icon   | Loopchain for ICON   |
-| iconee | Loopchain Enterprise |
+| Name     | Description           |
+|:---------|:----------------------|
+| icon     | ICON MainNet (goloop) | 
+| moonbeam | Moonbeam              |
 
 **NID**:
 ID of the network in the blockchain network system.
 
 > Example
 
-| Network Address | Description                                  |
-|:----------------|:---------------------------------------------|
-| `0x1.icon`      | ICON Network with nid="0x1" <- ICON Main-Net |
-| `0x1.iconee`    | Loopchain Enterprise network with nid="0x1"  |
+| Network Address | Description                                               |
+|:----------------|:----------------------------------------------------------|
+| `0x1.icon`      | ICON network with nid="0x1" (main net)                    |
+| `0x2.icon`      | ICON sub network with nid="0x2" (sub network on main net) |
+| `0x5.moonbeam`  | Moonbeam network with nid="0x5"                           |
 
 ### BTP Address
 
@@ -114,7 +115,8 @@ It should be composed of URL safe characters except "."(dot).
 > Example
 ```
 btp://0x1.icon/hxc0007b426f8880f9afbab72fd8c7817f0d3fd5c0
-btp://0x1.iconee/cx429731644462ebcfd22185df38727273f16f9b87
+btp://0x2.icon/hx7ab72fd8c7812680f9afbab72fd8c7817f0d3fd5
+btp://0x5.moonbeam/0x5425F5d4ba2B7dcb277C369cCbCb5f0E7185FB41
 ```
 
 It could be expanded to other resources.
@@ -460,7 +462,7 @@ def getVerifiers(self) -> dict:
     address of the BMV as a value.
     ```json
     {
-        "0x1.iconee": "cx72eaed466599ca5ea377637c6fa2c5c0978537da"
+        "0x1.icon": "cx72eaed466599ca5ea377637c6fa2c5c0978537da"
     }
     ```
 
@@ -474,7 +476,7 @@ def getLinks(self) -> list:
 * Returns
   -  A list of links ( BTP Addresses of the BMCs )
   ```json
-  [ "btp://0x1.iconee/cx9f8a75111fd611710702e76440ba9adaffef8656" ]
+  [ "btp://0x1.icon/cx9f8a75111fd611710702e76440ba9adaffef8656" ]
   ```
 
 ###### getRoutes
@@ -489,7 +491,7 @@ def getRoutes(self) -> dict:
     the BTP Address of the next as value.
     ```json
     {
-      "btp://0x2.iconee/cx1d6e4decae8160386f4ecbfc7e97a1bc5f74d35b": "btp://0x1.iconee/cx9f8a75111fd611710702e76440ba9adaffef8656"
+      "btp://0x2.icon/cx1d6e4decae8160386f4ecbfc7e97a1bc5f74d35b": "btp://0x1.icon/cx9f8a75111fd611710702e76440ba9adaffef8656"
     }
     ```
 
