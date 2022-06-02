@@ -1,20 +1,20 @@
----
-name: IIP Issue Template
-about: Necessary information for setting up an IIP Issue
-title: ''
-labels: ''
-assignees: ''
+```
+iip: 
+title: 
+author: <Name (@github-address)>
+discussions-to: <link-to-github-pull-request>
+status: Draft
+type: Standards Track
+category: IRC
+created: <date>
+```
 
----
+## Abstract
 
-## Proposal Description
+<!-- Something simple. No more than a few sentences -->
 
-Author:
-One-liner:
-Purpose:
+## Motivation
 
-## Proposal File
-[PROPOSAL FILE NAME](LINK)
+<!-- The reason why this improvement proposal exists -->
 
-## Discussion
-[DISCUSSION NAME](LINK)
+<!-- The actual ICON Improvement Proposal should be based off of the `iip-X.md` file in the base directory of this project -->
