@@ -1,3 +1,12 @@
+---
+name: IIP Issue Template
+about: Necessary information for setting up an IIP Issue
+title: "[DISCUSSION]"
+labels: ''
+assignees: ''
+
+---
+
 ```
 iip: 
 title: 
