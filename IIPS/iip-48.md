@@ -4,7 +4,8 @@ title: BIP-44 Path for derivation of ICON address from mnemonic seeds.
 author: Fidel (github.com/FidelVe), Ben (github.com/bkbooth), Eric (github.com/han-so1omon)
 discussions-to: https://forum.icon.community/t/creating-a-standard-for-the-bip44-path-derivation-of-icon-addresses-discussion/2702
 status: Draft
-type: Informational
+type: Standards Track
+category: IRC
 created: 2022-06-04
 ---
 
