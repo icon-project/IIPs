@@ -1,11 +1,11 @@
 ---
-iip: <to be assigned>
+iip: 48
 title: BIP-44 Path for derivation of ICON address from mnemonic seeds.
 author: Fidel (github.com/FidelVe), Ben (github.com/bkbooth), Eric (github.com/han-so1omon)
 discussions-to: https://forum.icon.community/t/creating-a-standard-for-the-bip44-path-derivation-of-icon-addresses-discussion/2702
 status: Draft
 type: Informational
-created: 2022-06-04T08:21:46+0000
+created: 2022-06-04
 ---
 
 <!--You can leave these HTML comments in your merged IIP and delete the visible duplicate text guides, they will not appear and may be helpful to refer to if you edit it again. This is the suggested template for new IIPs. Note that an IIP number will be assigned by an editor. When opening a pull request to submit your IIP, please use an abbreviated title in the filename, `iip-draft_title_abbrev.md`. The title should be 44 characters or less.-->
