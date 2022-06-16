@@ -179,9 +179,7 @@ If you are interested in assuming ownership of an IIP, send a message asking to 
 
 The current IIP editors are
 
-`* Jaechang Namgoong (@sink772)`
-
-`* Chiwon Cho (@goldworm-icon)`
+`* Eric Solomon (@han-so1omon)`
 
 `* Justin Hsiao (@icon2infiniti)`
 
@@ -216,6 +214,8 @@ July 29, 2018: IIP 1 has been improved and placed as a PR.
 August 1, 2018: Merged to master.
 
 May 28, 2020: Changed the list of IIP editors.
+
+June 16, 2022: Changed the list of IIP editors.
 
 ## Copyright
 
