@@ -41,3 +41,4 @@ When you believe your IIP is mature and ready to progress past the draft phase, 
 | [35](IIPS/iip-35.md) | ICON BTP Fee Gathering | Heonseung Lee | IRC | Draft |
 | [40](IIPS/iip-40.md) | ICON BTP Message Fragmentation | Heonseung Lee | IRC | Draft |
 | [48](IIPS/iip-48.md) | BIP-44 Path for derivation of ICON address from mnemonic seeds | Fidel, Ben, Eric | IRC | Draft |
+| [52](IIPS/iip-52.md) | ICON BTP Arbitrary Call Service Standard | Jaechang Namgoong | IRC | Draft |
