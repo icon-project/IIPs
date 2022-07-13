@@ -65,7 +65,7 @@ BigInteger sendCallMessage(String _to, byte[] _data, @Optional byte[] _rollback)
 
 The `_rollback` parameter is for handling error cases, see [Error Handling](#error-handling) section below for details.
 
-This method is payable, and DApps need to call this method with proper fees.
+This method is payable, and DApps need to call this method with proper fees, see [Fees Handling](#fees-handling) section below for details.
 
 When `xcall` on the source chain receives the call request message, it sends the `_data` to the destination chain via BMC.
 
@@ -167,6 +167,76 @@ void executeRollback(BigInteger _sn);
 Then the `xcall` invokes the `handleCallMessage` in the source DApp with the given `_rollback` data.
 At this time, the `_from` would be the BTP address of `xcall`.
 
+### Fees Handling
+
+The RI for ICON network has adopted a simple fixed fees handling mechanism. If a user wants to make a call from
+ICON to the T1 network, he needs to pay X ICX, and for the T2 network he needs to pay Y ICX.  That is, the fees
+depend on the destination network address.  Also, a `default` fee has been defined in case of there is no fee
+mapping to the network address.
+
+The fees are divided into two types, one is for relays and the other is for protocol itself.
+For example, for a destination chain T1, the fees could be relayFee = 0.25 ICX and protocolFee = 0.01 ICX.
+And relayFee goes to relays, protocolFee goes to BTP protocol
+(eventually, [Fee Aggregator SCORE](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-35.md)).
+In this document, we don't address how to deal with these accrued fees for distribution.
+For the fees distribution, we need to introduce another follow-up specification.
+
+Here are getter and setter methods for the fixed fees handling. DApps that want to make a call to `sendCallMessage`,
+should query the total fixed fees for the destination network via `totalFixedFees` interface, and then enclose the
+appropriate fees in the method call.
+
+```java
+/**
+ * Gets the fixed fee for the given network address and type.
+ * If there is no mapping to the network address, `default` fee is returned.
+ *
+ * @param _net The network address
+ * @param _type The fee type ("relay" or "protocol")
+ * @return The fee amount in loop
+ */
+@External(readonly=true)
+BigInteger fixedFee(String _net, String _type);
+
+/**
+ * Gets the total fixed fees for the given network address.
+ * If there is no mapping to the network address, `default` fee is returned.
+ *
+ * @param _net The network address
+ * @return The total fees amount in loop
+ */
+@External(readonly=true)
+BigInteger totalFixedFees(String _net);
+
+/**
+ * Sets the fixed fees for the given network address.
+ * Only the admin wallet can invoke this.
+ *
+ * @param _net The destination network address
+ * @param _relay The relay fee amount in loop
+ * @param _protocol The protocol fee amount in loop
+ */
+@External
+void setFixedFees(String _net, BigInteger _relay, BigInteger _protocol);
+
+/**
+ * Gets the total accrued fees for the given type.
+ *
+ * @param _type The fee type ("relay" or "protocol")
+ * @return The total accrued fees in loop
+ */
+@External(readonly=true)
+BigInteger accruedFees(String _type);
+
+/**
+ * Notifies the user that the fees have been successfully updated.
+ *
+ * @param _net The destination network address
+ * @param _relay The relay fee amount in loop
+ * @param _protocol The protocol fee amount in loop
+ */
+@EventLog(indexed=1)
+void FixedFeesUpdated(String _net, BigInteger _relay, BigInteger _protocol);
+```
 
 ## Implementation
 * [The RI of the `xcall` between ICON to ICON](https://github.com/icon-project/btp/tree/iconloop-v2/javascore/xcall)
