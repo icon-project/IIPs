@@ -259,7 +259,8 @@ def tokenURI(self, _id: int) -> str:
 ```
 
 ## Implementation
-* [ICON Multi-Token Standard Implementation](https://github.com/sink772/multi-token-standard)
+* ~~[ICON Multi-Token Standard Implementation](https://github.com/sink772/multi-token-standard)~~
+* [A Java SCORE Library for ICON Standard Tokens](https://github.com/sink772/javaee-tokens)
 
 ## References
 * [IRC-2 Token Standard](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-2.md)
