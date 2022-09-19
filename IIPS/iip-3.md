@@ -100,7 +100,8 @@ def Approval(self, _owner: Address, _approved: Address, _tokenId: int):
 ```
 
 ## Implementation
-* [ICON IRC3 NFT Token Standard RI](https://github.com/icon2infiniti/Samples/tree/master/IRC3)
+* ~~[ICON IRC3 NFT Token Standard RI](https://github.com/icon2infiniti/Samples/tree/master/IRC3)~~
+* [A Java SCORE Library for ICON Standard Tokens](https://github.com/sink772/javaee-tokens)
 
 ## References
 * [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)

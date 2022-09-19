@@ -84,7 +84,8 @@ def tokenFallback(self, _from: Address, _value: int, _data: bytes):
 ```
 
 ## Implementation
-* https://github.com/icon-project/samples/tree/master/irc2_token
+* ~~https://github.com/icon-project/samples/tree/master/irc2_token~~
+* [A Java SCORE Library for ICON Standard Tokens](https://github.com/sink772/javaee-tokens)
 
 ## References
 * [https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
