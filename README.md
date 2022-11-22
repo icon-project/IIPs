@@ -1,3 +1,17 @@
+<p align="center">
+    <img src="./assets/ICONlogo.svg" alt="ICON Logo" width="400px"></img>
+</p>
+
+<h3 align="center">
+    ICON supports open development for decentralized technologies
+</h3>
+
+<p align="center">
+    <a href="https://twitter.com/iconfoundation_"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg"></a>
+    &nbsp;
+    <a href="https://www.linkedin.com/company/helloiconworld"><img src="https://img.shields.io/badge/linkedin-connect_with_us-0a66c2.svg"></a>
+</p>
+
 # IIPs
 ICON Improvement Proposals (IIPs) describe standards for the ICON platform, including core protocol specifications, client APIs, and contract standards.
 
