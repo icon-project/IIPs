@@ -169,11 +169,12 @@ At this time, the `_from` would be the BTP address of `xcall`.
 
 ### Fees Handling
 
-If a user wants to make a call from ICON to the T1 network, he needs to pay X ICX, and for the T2 network
-he needs to pay Y ICX.  That is, the fees depend on the destination network address.
+If a user wants to make a call from ICON to Target Network 1 (T1), he needs to pay X ICX,
+and for Target Network 2 (T2), he needs to pay Y ICX.
+That is, the fees depend on the destination network address.
 
 The fees are divided into two types, one is for relays and the other is for protocol itself.
-For example, for a destination chain T1, the fees could be relayFee = 0.25 ICX and protocolFee = 0.01 ICX.
+For example, for a destination network T1, the fees could be relayFee = 0.25 ICX and protocolFee = 0.01 ICX.
 And relayFee goes to relays, protocolFee goes to BTP protocol (eventually, to the Fee Handler).
 In this document, we don't address how to deal with these accrued fees for distribution,
 but just define operational parts like how to get the proper fee amount before sending the call request, etc.
