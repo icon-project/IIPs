@@ -27,7 +27,7 @@ will be utilized for sending and receiving the requested arbitrary call payloads
 ## Motivation
 
 Adding a new service to an existing BTP infrastructure requires an audit of the code to ensure that the service
-does not have any malicious behavior, because the Relay bears the gas cost of executing the service transaction.
+does not have any malicious behavior, because relays bear the gas cost of executing the service transaction.
 To improve scalability and flexibility and to overcome the restriction mentioned above, we propose a new interface
 for invoking arbitrary cross-chain contract calls that can appropriately charge the gas cost to users triggering
 cross-chain transactions.
@@ -134,7 +134,7 @@ before the call request.
 
 If a DApp needs to handle a rollback operation, it would fill some data in the last `_rollback` parameter of the `sendCallMessage`,
 otherwise it would have a null value which indicates no rollback handling is required.
-When an error occurs and the `_rollback` is not null, `xcall` emits the following event for notifying the user.
+When an error occurs and the `_rollback` is not null, `xcall` emits the following event for notifying the user on the source chain.
 
 ```java
 /**
@@ -169,73 +169,71 @@ At this time, the `_from` would be the BTP address of `xcall`.
 
 ### Fees Handling
 
-The RI for ICON network has adopted a simple fixed fees handling mechanism. If a user wants to make a call from
-ICON to the T1 network, he needs to pay X ICX, and for the T2 network he needs to pay Y ICX.  That is, the fees
-depend on the destination network address.  Also, a `default` fee has been defined in case of there is no fee
-mapping to the network address.
+If a user wants to make a call from ICON to Target Network 1 (T1), he needs to pay X ICX,
+and for Target Network 2 (T2), he needs to pay Y ICX.
+That is, the fees depend on the destination network address.
 
 The fees are divided into two types, one is for relays and the other is for protocol itself.
-For example, for a destination chain T1, the fees could be relayFee = 0.25 ICX and protocolFee = 0.01 ICX.
-And relayFee goes to relays, protocolFee goes to BTP protocol
-(eventually, [Fee Aggregator SCORE](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-35.md)).
-In this document, we don't address how to deal with these accrued fees for distribution.
-For the fees distribution, we need to introduce another follow-up specification.
+For example, for a destination network T1, the fees could be relayFee = 0.25 ICX and protocolFee = 0.01 ICX.
+And relayFee goes to relays, protocolFee goes to BTP protocol (eventually, to the Fee Handler).
+In this document, we don't address how to deal with these accrued fees for distribution,
+but just define operational parts like how to get the proper fee amount before sending the call request, etc.
 
-Here are getter and setter methods for the fixed fees handling. DApps that want to make a call to `sendCallMessage`,
-should query the total fixed fees for the destination network via `totalFixedFees` interface, and then enclose the
-appropriate fees in the method call.
+Here are getter and setter methods for the proper fees handling in `xcall`.
+DApps that want to make a call to `sendCallMessage`, should query the total fee amount for the destination
+network via `getFee` interface, and then enclose the appropriate fees in the method call.
+Note that the protocol fee amount can be get/set via `xcall`, but the relay fee would be obtained from BMC
+which manages BTP network connections.
 
 ```java
 /**
- * Gets the fixed fee for the given network address and type.
- * If there is no mapping to the network address, `default` fee is returned.
+ * Gets the fee for delivering a message to the _net.
+ * If the sender is going to provide rollback data, the _rollback param should set as true.
+ * The returned fee is the sum of the protocol fee and the relay fee.
  *
  * @param _net The network address
- * @param _type The fee type ("relay" or "protocol")
- * @return The fee amount in loop
+ * @param _rollback Indicates whether it provides rollback data
+ * @return the sum of the protocol fee and the relay fee
  */
 @External(readonly=true)
-BigInteger fixedFee(String _net, String _type);
+BigInteger getFee(String _net, boolean _rollback);
 
 /**
- * Gets the total fixed fees for the given network address.
- * If there is no mapping to the network address, `default` fee is returned.
+ * Sets the protocol fee amount.
  *
- * @param _net The network address
- * @return The total fees amount in loop
- */
-@External(readonly=true)
-BigInteger totalFixedFees(String _net);
-
-/**
- * Sets the fixed fees for the given network address.
- * Only the admin wallet can invoke this.
- *
- * @param _net The destination network address
- * @param _relay The relay fee amount in loop
- * @param _protocol The protocol fee amount in loop
+ * @param _value The protocol fee amount in loop
+ * @implNote Only the admin wallet can invoke this.
  */
 @External
-void setFixedFees(String _net, BigInteger _relay, BigInteger _protocol);
+void setProtocolFee(BigInteger _value);
 
 /**
- * Gets the total accrued fees for the given type.
+ * Gets the current protocol fee amount.
  *
- * @param _type The fee type ("relay" or "protocol")
- * @return The total accrued fees in loop
+ * @return The protocol fee amount in loop
  */
 @External(readonly=true)
-BigInteger accruedFees(String _type);
+BigInteger getProtocolFee();
 
 /**
- * Notifies the user that the fees have been successfully updated.
+ * Sets the address of Fee Handler.
+ * If _addr is null (default), it accrues protocol fees.
+ * If _addr is a valid address, it transfers accrued fees to the address and
+ * will also transfer the receiving fees hereafter.
  *
- * @param _net The destination network address
- * @param _relay The relay fee amount in loop
- * @param _protocol The protocol fee amount in loop
+ * @param _addr The address of Fee Handler
+ * @implNote Only the admin wallet can invoke this.
  */
-@EventLog(indexed=1)
-void FixedFeesUpdated(String _net, BigInteger _relay, BigInteger _protocol);
+@External
+void setProtocolFeeHandler(@Optional Address _addr);
+
+/**
+ * Gets the current protocol fee handler address.
+ *
+ * @return The protocol fee handler address
+ */
+@External(readonly=true)
+Address getProtocolFeeHandler();
 ```
 
 ## Implementation
