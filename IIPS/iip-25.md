@@ -125,16 +125,35 @@ It could be expanded to other resources.
 
 A message delivered across blockchains.
 
-| Name | Type    | Description                                          |
-|:-----|:--------|:-----------------------------------------------------|
-| src  | String  | BTP Address of source BMC                            |
-| dst  | String  | BTP Address of destination BMC                       |
-| svc  | String  | name of the service                                  |
-| sn   | Integer | serial number of the message                         |
-| msg  | Bytes   | serialized bytes of Service Message or Error Message |
+| Name | Type     | Description                                          |
+|:-----|:---------|:-----------------------------------------------------|
+| src  | String   | Network Address of source network                    |
+| dst  | String   | Network Address of destination network               |
+| svc  | String   | name of the service                                  |
+| sn   | Integer  | serial number of the message                         |
+| msg  | Bytes    | serialized bytes of Service Message or Error Message |
+| nsn  | Integer  | network serial number of the message                 |
+| fee  | RelayFee | relay fee information                                |
 
-if **sn** is negative, **msg** should be Error Message.
-It would be serialized in [RLP serialization](#rlp-serialization).
+If **sn** is negative, **msg** should be Error Message.
+
+If **nsn** is negative, then it's a responding message to the message from **dst** with **-nsn**.
+Positive **nsn** and **src** or negative **nsn** and **dst** can be used to make ID for tracking message delivery. They are used for generating [BTP Event](#btpevent)
+
+If **fee** is null, then [BMC](#btp-message-center) does nothing. Otherwise, it processes fee information and updates it after processing.
+
+It would be serialized in [RLP serialization](#rlp-serialization) as structure.
+
+### Relay Fee
+
+Relay fee information for the message
+
+| Name   | Type      | Description                        |
+|:-------|:----------|:-----------------------------------|
+| net    | String    | Network Address of relay fee       |
+| values | []Integer | Relay fee for relaying the message |
+
+If **fee** is not empty, then BMC removes the first entry from the list and it will accrue the fee. for claim in later (using [claimReward](#claimreward) )
 
 
 ### Error Message
@@ -148,6 +167,15 @@ A message for delivering error information.
 
 It would be serialized in [RLP serialization](#rlp-serialization).
 
+Defined codes are followings.
+
+| Code | Description                   |
+|:-----|:------------------------------|
+| 0    | Success                       |
+| 1    | Unknown                       |
+| 2    | No route to the destination   |
+| 3    | No registered service handler |
+| 4    | Reverted by service handler   |
 
 ### RLP serialization
 
@@ -172,6 +200,10 @@ If it's negative, the highest bit of the first byte should be 1.
 | 0     | 0x00          |
 | -1    | 0xff          |
 | -128  | 0x80          |
+
+#### Structure
+
+It encodes the structure as a list of field values in the order. When it decodes bytes to the structure, it doesn't have enough values for the fields, then those fields are reset as null values. It has more values than fields, then those values are dropped and silently ignored.
 
 ### Relay Message
 
@@ -247,19 +279,16 @@ BTP Message with error reply is composed of the following,
 #### BMC service message
 
 BMC service message is a BTP message dispatched by BMC.
-
-###### Format
-
-```
-svc: "bmc"
-```
-
-##### BMC Service Message
+In that case service name would be `bmc`.
+And the message is RLP encoded list of following values.
 
 | Name    | Type   | Description                                            |
 | :------ | :----- | :----------------------------------------------------- |
 | type    | String | type of BMC Service Message (Init, Link, Unlink, Sack) |
 | payload | Bytes  | serialized bytes of Message                            |
+
+Payload of message is also a RLP encoded list of the fields in the following
+message types.
 
 ##### Init Message
 
@@ -291,17 +320,6 @@ send to all of connected BMC except given _link on [BMC.removeLink](#removelink)
 
 BMC could update status of connected BMC to use to resolve route.
 
-##### Sack Message
-
-BMC could send to previous BMC on [BMC.handleRelayMessage](#handlerelaymessage) periodically
-
-| Name   | Type    | Description                           |
-| :----- | :------ | :------------------------------------ |
-| height | Integer | Height of BMV                         |
-| seq    | Integer | Sequence of last received BTP Message |
-
-BMC could reject on [BMC.sendMessage](#sendmessage) using above information if necessary.
-
 #### Interface
 
 ##### Writable methods
@@ -322,16 +340,25 @@ def handleRelayMessage(self, _prev: str, _msg: str):
 ###### sendMessage
 ```python
 @external
-def sendMessage(self, _to: str, _svc: str, _sn: int, _msg: bytes):
+@payable
+def sendMessage(self, _to: str, _svc: str, _sn: int, _msg: bytes) -> int:
 ```
 * Params
   - _to: String ( Network Address of destination network )
   - _svc: String ( name of the service )
-  - _sn: Integer ( serial number of the message, must be positive )
+  - _sn: Integer ( serial number of the message )
   - _msg: Bytes ( serialized bytes of Service Message )
 * Description:
   - Sends the message to a specific network.
+  - If _sn is postive, then it assumes that the message is two-way message. It expects a reponse or a delivery failure.
+  - If _sn is zero, then it assumes that the message is one-way message. It could be dropped by an error. 
+  - If _sn is negative, then it sends the response for the message from _to with same _svc and negated _sn.
+    If there is no message related with _svc, _to and _sn, then it reverts.
+    It uses negated value of nsn of the message for nsn of the responding BTP message.
   - Only allowed to be called by registered BSHs.
+* Returns
+  - Network serial number
+  - It would zero on sending response [TBD]
 
 ###### addService
 ```python
@@ -396,6 +423,8 @@ def addLink(self, _link: str):
     then it fails.
   - Initializes status information for the link.
   - Called by the operator to manage the BTP network.
+  - It sends [BMC.Init](#init-message) to added BMC.
+  - It sends [BMC.Link](#link-message) to already registered BMCs.
 
 ###### removeLink
 ```python
@@ -407,6 +436,7 @@ def removeLink(self, _link: str):
 * Description
   - Removes the link and status information.
   - Called by the operator to manage the BTP network.
+  - It sends [BMC.Unlink](#unlink-message) to other remaining BMCs.
 
 ###### addRoute
 ```python
@@ -414,11 +444,11 @@ def removeLink(self, _link: str):
 def addRoute(self, _dst: str, _link: str):
 ```
 * Params
-  - _dst: String ( BTP Address of the destination BMC )
+  - _dst: String ( Network Address of the destination network )
   - _link: String ( BTP Address of the next BMC for the destination )
 * Description:
-  - Add route to the BMC.
-  - May fail if there more than one BMC for the network.
+  - Add route to the network.
+  - May fail if there is already registered route to the network.
   - Called by the operator to manage the BTP network.
 
 ###### removeRoute
@@ -427,9 +457,9 @@ def addRoute(self, _dst: str, _link: str):
 def removeRoute(self, _dst: str):
 ```
 * Params
-  - dst: String ( BTP Address of the destination BMC )
+  - dst: String ( Network Address of the destination network )
 * Description:
-  - Remove route to the BMC.
+  - Remove route to the network.
   - Called by the operator to manage the BTP network.
 
 ##### Read-only methods
@@ -487,11 +517,11 @@ def getRoutes(self) -> dict:
 * Description:
   - Get routing information.
 * Return
-  - A dictionary with the BTP Address of the destination BMC as key and
-    the BTP Address of the next as value.
+  - A dictionary with the Network Address of the destination network as key and
+    the BTP Address of the next(link) as a value.
     ```json
     {
-      "btp://0x2.icon/cx1d6e4decae8160386f4ecbfc7e97a1bc5f74d35b": "btp://0x1.icon/cx9f8a75111fd611710702e76440ba9adaffef8656"
+      "0x2.icon": "btp://0x1.icon/cx9f8a75111fd611710702e76440ba9adaffef8656"
     }
     ```
 
@@ -515,6 +545,8 @@ def getStatus(self, _link: str) -> dict:
     | rx_seq   | Integer | next sequence number of the message to receive   |
     | verifier | Object  | status information of the BMV                    |
 
+  - verifier is object returned by [BMV.getStatus](#bmvgetstatus)
+
 
 ##### Events
 
@@ -531,6 +563,259 @@ def Message(self, _next: str, _seq: int, _msg: bytes):
 * Description
   - Sends the message to the next BMC.
   - The relay monitors this event.
+
+###### BTPEvent
+```python
+@eventlog(indexed=2)
+def BTPEvent(self, _src: str, _nsn: int, _next: str, _event: str):
+```
+* Indexed: 2
+* Params
+  - _src: String ( Network Address of the source network of the message )
+  - _nsn: Integer ( Network Serial Number of the message in the source network )
+  - _next: String ( Network Address of the next network for route )
+  - _event: String ( Event name )
+
+    | Event name | Description                                                    |
+    |:-----------|:---------------------------------------------------------------|
+    | SEND       | The message from _src with _nsn is sent to _next               |
+    | ROUTE      | The message from _src with _nsn is routed to _next             |
+    | DROP       | The message from _src with _nsn is dropped                     |
+    | RECEIVE    | The message from _src with _nsn is received                    |
+    | REPLY      | The reply for the message from _src with _nsn is sent to _next |
+    | ERROR      | The error for the message from _src with _nsn is sent to _next |
+
+* Description
+  - It's generated while the message is processed in the BMC.
+  - _src and _nsn can be used as ID for tracking message delivery.
+
+* Example
+  A message delivery from A to B through H
+  ```
+  A.BMC : BTPEvent(A,<nsn>,H,SEND)
+  H.BMC : BTPEvent(A,<nsn>,B,ROUTE)
+  B.BMC : BTPEvent(A,<nsn>,null,RECEIVE)
+  ```
+  If it's responded
+  ```
+  B.BMC : BTPEvent(A,<nsn>,H,REPLY)
+  H.BMC : BTPEvent(A,<nsn>,A,ROUTE)
+  A.BMC : BTPEvent(A,<nsn>,null,RECEIVE)
+  ```
+
+##### Error codes
+
+Error codes will be used on [error message](#error-message) by BMC.
+Followings are defined error codes.
+
+| Code | Description                                                 |
+|:-----|:------------------------------------------------------------|
+| 0    | <a id="error-code-success"></a>Success                      |
+| 1    | Unknown                                                     |
+| 2    | No route to the destination                                 |
+| 3    | No registered service handler                               |
+| 4    | <a id="error-code-reverted"></a>Reverted by service handler |
+
+#### Relay Fee
+
+To sustain BTP network, [Relay Message](#relay-message)s need to be delivered continuously.
+To make relays deliver them, it charges fees for delivery and distributes them to relays as much as they did.
+For this, we have invented to **Relay Fee** feature.
+
+[BMC](#btp-message-center) do following works.
+* Knows fee information for the delivery.
+* Charges [BSH](#btp-service-handler) the sum of the fees for the delivery.
+* Inject fee information on sending a BTP message.
+* Collect fees for each relays on compiling BTP messages.
+* Handle claim requests from the relays.
+
+##### Added Behavior
+
+###### Know fee information
+
+BMC needs to know fees for each relay message deliveries for a delivery.
+If there is no routing blockchain, it requires two fees for a delivery.
+If A is the source, and B is the destination, then it needs to know two fees.
+
+* `Fee(A,B)`, fee from A to B
+* `Fee(B,A)`, fee from B to A
+
+If there are N mediating blockchains (`C1` to `Cn`), then it needs to know forward direction fees as the following.
+
+`Fee(C1,C2)`, `Fee(C2, C3)`, ... , `Fee(Cn-1,Cn)`
+
+And also it needs to know backward direction fees for response as the following.
+
+`Fee(C2,C1)`, `Fee(C3, C2)`, ... , `Fee(Cn,Cn-1)`
+
+So, it needs to know `2(N-1)` fees.
+
+These values would be used for **fee** field of [BTP Message](#btp-message).
+Please refer [Inject fee information](#inject-fee-information)
+
+The implementor need to make own implementation to manage those values.
+But those values needs to be ready before sending any messages.
+
+###### Charge fee
+
+Whenver [BSH](#btp-service-handler) sends a new message to the destination
+with [sendMessage](#sendmessage), it should also pay a proper fee.
+[getFee](#getfee) should return proper fee amount to pay.
+
+When it sends the response for the message, it doesn't need to pay a fee,
+because it's already payed by original sender of the message.
+
+###### Inject fee information
+
+Whenever it sends a message with [sendMessage](#sendmessage), then it may fill **fee** field of [BTP Message](#btp-message) with proper information
+
+If it sends a new message (not response), then it sets **fee** of [BTP Message](#btp-message) as [Relay fee](#relay-fee) with the following values.
+
+* src : Network Address of current blockchain
+* fee : A list of fees to pay for each relay message delivery
+  If the message is two-way message, having positive *sn*, then it includes forward and backward fees in the order.
+  If the message is one-way message, having zero *sn*, then it includes forward fees.
+
+Otherwise, it uses stored information which is stored in the step
+([Dispatch BTP Message](#dispatch-btp-message))
+
+###### Compile BTP Mesasge
+
+Whenever it receives the BTP message from the relay, it checkes **fee** field of [Relay Fee](#relay-fee). If it's not available or empty, then it does nothing. Otherwise, it fetches the first entry of it accrues the fee as the reward for the sender. Transaction sender is a relay.
+
+**Example**
+
+BTP Message is sent to `0x2.icon` at `0x1.icon`.
+BMC of `0x2.icon` receives the message like following.
+
+```json
+{
+  "src": "0x1.icon",
+  "dst": "0x2.icon",
+  "sn" : 10,
+  "nsn" : 376,
+  "fee": {
+    "network": "0x1.icon",
+    "fee": [ 10, 8 ]
+  }
+}
+```
+
+It accrues the fee as the reward before dispatching it.
+
+```json
+{
+  "src": "0x1.icon",
+  "dst": "0x2.icon",
+  "sn" : 10,
+  "nsn" : 376,
+  "fee": {
+    "network": "0x1.icon",
+    "fee": [ 8 ]
+  }
+}
+```
+
+Then it follows [receives a message](#receive-a-message).
+
+###### Dispatch BTP message
+
+When the message arrives at the destination, it stores **fee** field of [Relay Fee](#relay-fee) for the response if the serial number is positive (two-way message). And this information should be used on sending response for the message.
+
+Abandoned fees will be accrued as a reward for BMC, itself.
+
+##### Writable methods
+
+###### claimReward
+```python
+@external
+@payable
+def claimReward(self, _network: str, _receiver: str):
+```
+* Params
+  - _network: String ( Network Address of the reward )
+  - _receiver: String ( Reward receiver in the target network )
+* Description
+  - Claim accrued reward for relaying messages by the **sender**.
+  - If network is same as current network, then it directly transfer reward to it.
+  - Otherwise, it sends a [Claim Message](#claim-message) to the BMC of the target network.
+
+* Event
+  - [ClaimReward](#claimreward-event) on sending claim request to the other network.
+  - [ClaimRewardResult](#claimrewardresult-event) on receiving the result of the claim request
+
+##### Read-only methods
+
+###### getFee
+```python
+@external(readonly=True)
+def getFee(self, _network: str, _response: bool) -> int:
+```
+* Params
+  - network: String ( Network Address of the destination network )
+  - response: Bool ( Whether it requires response )
+* Description
+  - Returns relay fee to send a message to the network.
+  - If it wants to get a response or delivery failure for the message, then _response must be true and positive value is used for _sn on [BMC.sendMessage](#sendmessage)
+* Returns
+  - Relay fee for the delivery
+
+###### getReward
+```python
+@external(readonly=True)
+def getReward(self, _network: str, _addr: Address) -> int:
+```
+* Params
+  - network: String ( Network Address of the reward )
+  - addr: Address ( Address of the relay )
+* Description
+  - Get accrued reward amount of the network for the relay
+* Returns
+  - Amount of the reward for the relay in the unit of target network
+
+##### Events
+
+###### ClaimReward event
+```python
+@eventlog(indexed=2)
+ClaimReward(self, _sender: Address, _network: str, _amount: int, _nsn: int):
+```
+* Params
+  - sender: Address ( Claiming requestor )
+  - network: String ( Network Address for the reward )
+  - nsn: Integer ( Network Serial Number for the request )
+* Description
+  - It's generated when it succeeds to send claiming request to the 
+* Event
+
+###### ClaimRewardResult event
+```python
+@eventlog(indexed=2)
+ClaimRewardResult(self, _sender: Address, _network: str, _nsn: int, _result: int):
+```
+* Params
+  - sender: Address ( Claiming requestor )
+  - network: String ( Network Address for the reward )
+  - nsn: Integer ( Network Serial Number for the request )
+  - result: Integer ( Result of the request )
+* Description
+  - It's generated when it receives the result of the claiming request.
+
+##### BMC service message for Relay Fee
+
+Its extension to [BMC service message](#bmc-service-message)
+
+###### Claim Message
+
+Type of message is `Claim`.
+
+| Name     | Type    | Description                    |
+|:---------|:--------|:-------------------------------|
+| amount   | Integer | Amount of to be claimed        |
+| receiver | String  | Receiver of the claimed reward |
+
+On success, it sends [error message](#error-message) with zero code.
+BMC may use `nsn` of [BTP Message](#btp-message) to handle the result.
 
 ### BTP Message Verifier
 
@@ -582,6 +867,25 @@ def handleRelayMessage(self, _bmc: str, _prev: str, _seq: int, _msg: bytes) -> l
   - _msg: Bytes ( serialized bytes of Relay Message )
 * Returns
   - List of serialized bytes of a [BTP Message](#btp-message)
+
+##### Read-only methods
+
+###### BMV.getStatus
+```python
+@external(readonly=True)
+def getStatus(self) -> dict:
+```
+* Description
+  - Get status of the BMV
+* Returns
+  - A dictionary with following required keys. Additional keys are allowed for own purpose
+
+    | Name   | Type    | Description                |
+    |:-------|:--------|:---------------------------|
+    | height | Integer | Height of finalized blocks |
+    | extra  | Bytes   | Encoded extra data         |
+
+  - `extra` field is used for chain specific status information.
 
 ### BTP Service Handler
 
@@ -649,7 +953,7 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
   - Handle the error on delivering the message.
   - Accept the error only from the BMC.
 * Params
-  - _src: String ( BTP Address of BMC that generated the error )
+  - _src: String ( Network Address of BMC that generated the error )
   - _svc: String ( name of the service )
   - _sn: Integer ( serial number of the original message )
   - _code: Integer ( code of the error )
@@ -678,16 +982,20 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
 
      | Name | Type    | Description                                   |
      |:-----|:--------|:----------------------------------------------|
-     | src  | String  | BTP Address of current BMC                    |
-     | dst  | String  | BTP Address of destination BMC in the network |
+     | src  | String  | Network address of the current blockchain     |
+     | dst  | String  | Network address of the destination blockchain |
      | svc  | String  | Given service name                            |
      | sn   | Integer | Given serial number                           |
      | msg  | Bytes   | Given service message                         |
+     | nsn  | Integer | Generated network serial number               |
+     | fee  | Fee     | Fee information for the target                |
 
    * BMC decide the next BMC according to the destination.
      If there is no route to the destination BMC.
 
-   * BMC generates an event with BTP Message.
+   * BMC sends BTP Message using the method that the blockchain supports.
+     It may send an message through the event containing the following
+     information.
 
      | Name  | Type    | Description                                |
      |:------|:--------|:-------------------------------------------|
@@ -739,12 +1047,14 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
 6. BSH handles Service Messages
 
    * BMC dispatches BTP Messages.
-   * If the destination BMC isn't current one, then it locates
-     the next BMC and generates the event.
-   * If the destination BMC is the current one, then it locates BSH
+   * If the destination isn't current one, then it locates
+     the next BMC and routes the message.
+   * If the destination is the current one, then it locates BSH
      for the service of the BTP Message.
+   * If *_sn* is positive and it stores *fee* and *nsn* for the response
+     to *_from* for the message with  *_svc* and *_sn*.
    * Calls [BSH.handleBTPMessage](#handlebtpmessage) if
-     the message has a positive value as *_sn*.
+     the message has a non-negative value as *_sn*.
 
      | Name  | Type    | Description                           |
      |:------|:--------|:--------------------------------------|
@@ -757,12 +1067,38 @@ def handleBTPError(self, _src: str, _svc: str, _sn: int, _code: int, _msg: str):
 
      | Name  | Type    | Description                                    |
      |:------|:--------|:-----------------------------------------------|
-     | _src  | String  | BTP Address of the BMC that generated the error|
-     | _svc  | String  | Given service name                             |
-     | _sn   | Integer | Given serial number                            |
+     | _src  | String  | Network Address of BMC generateed the message  |
+     | _svc  | String  | Service name of the message                    |
+     | _sn   | Integer | Serial number of the message                   |
      | _code | Integer | Given error code                               |
      | _msg  | String  | Given error message                            |
 
+7. BSH sends a response
+
+    * It should send a response if *_sn* is positive.
+
+     | Name  | Type    | Description                         |
+     |:------|:--------|:------------------------------------|
+     | _to   | String  | _from of the message                |
+     | _svc  | String  | _svc of the message                 |
+     | _sn   | Integer | Negated value of _sn of the message |
+     | _msg  | Bytes   | Response to the message             |
+
+8. BMC sends a response
+
+    * It gets stored response information ( *fee* and *nsn* )
+
+    * It builds BTP message for response
+
+     | Name | Type    | Description                                   |
+     |:-----|:--------|:----------------------------------------------|
+     | src  | String  | Network address of the current blockchain     |
+     | dst  | String  | Network address of the destination blockchain |
+     | svc  | String  | Service name                                  |
+     | sn   | Integer | 0                                             |
+     | msg  | Bytes   | Response to the message                       |
+     | nsn  | Integer | Negated value of nsn of the BTP message       |
+     | fee  | Fee     | Fee information of the BTP message            |
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
