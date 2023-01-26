@@ -51,7 +51,6 @@ The `_data` is DApp-specific payload.
 ```java
 /**
  * Sends a call message to the contract on the destination chain.
- * Only allowed to be called from the contract.
  *
  * @param _to The BTP address of the callee on the destination chain
  * @param _data The calldata specific to the target contract
