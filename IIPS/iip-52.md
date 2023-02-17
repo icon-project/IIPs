@@ -46,7 +46,6 @@ to the caller using the same `sendCallMessage` interface.
 #### sendCallMessage
 
 DApps need to invoke the following method of `xcall` on the source chain to send a call message to the destination chain.
-The `_data` is DApp-specific payload.
 
 ```java
 /**
@@ -62,11 +61,35 @@ The `_data` is DApp-specific payload.
 BigInteger sendCallMessage(String _to, byte[] _data, @Optional byte[] _rollback);
 ```
 
+The `_to` parameter is the [BTP address](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-25.md#btp-address)
+of the callee contract which receives the `_data` payload on the destination chain.
+
+The `_data` parameter is an arbitrary payload defined by the DApp.
+
 The `_rollback` parameter is for handling error cases, see [Error Handling](#error-handling) section below for details.
 
 This method is payable, and DApps need to call this method with proper fees, see [Fees Handling](#fees-handling) section below for details.
 
-When `xcall` on the source chain receives the call request message, it sends the `_data` to the destination chain via BMC.
+When `xcall` on the source chain receives the call request message, it sends the `_data` to `_to` on the destination chain through BMC.
+
+#### CallMessageSent
+
+When `xcall` invokes [`sendMessage`](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-25.md#sendmessage) in BMC,
+it returns `nsn` (network serial number) that identifies each BTP message from the source chain.
+The following event is emitted after `xcall` receives the `nsn` from BMC, and can be used for BTP message tracking purpose.
+
+```java
+/**
+ * Notifies that the requested call message has been sent.
+ *
+ * @param _from The chain-specific address of the caller
+ * @param _to The BTP address of the callee on the destination chain
+ * @param _sn The serial number of the request
+ * @param _nsn The network serial number of the BTP message
+ */
+@EventLog(indexed=3)
+void CallMessageSent(Address _from, String _to, BigInteger _sn, BigInteger _nsn);
+```
 
 #### CallMessage
 
@@ -80,10 +103,9 @@ When the `xcall` on the destination chain receives the call request through BMC,
  * @param _to A string representation of the callee address
  * @param _sn The serial number of the request from the source
  * @param _reqId The request id of the destination chain
- * @param _data The calldata
  */
 @EventLog(indexed=3)
-void CallMessage(String _from, String _to, BigInteger _sn, BigInteger _reqId, byte[] _data);
+void CallMessage(String _from, String _to, BigInteger _sn, BigInteger _reqId);
 ```
 
 #### executeCall
@@ -92,7 +114,7 @@ The user on the destination chain recognizes the call request and invokes the fo
 
 ```java
 /**
- * Executes the requested call.
+ * Executes the requested call message.
  *
  * @param _reqId The request Id
  */
@@ -117,10 +139,27 @@ with the calldata associated in `_reqId`.
 void handleCallMessage(String _from, byte[] _data);
 ```
 
-If DApp on the destination chain needs to send back the result (or error), it may call the same method interface
-(i.e. `sendCallMessage`) to send the result message to the caller.
+If the call request was a one-way message and DApp on the destination chain needs to send back the result (or error),
+it may call the same method interface (i.e. `sendCallMessage`) to send the result message to the caller.
 Then the user on the source chain would be notified via `CallMessage` event, and call `executeCall`,
-then DApp may process the result in the `handleCallMessage` method.
+then DApp on the source chain may process the result in the `handleCallMessage` method.
+
+#### CallExecuted
+
+To notify the execution result of DApp's `handleCallMessage` method, the following event is emitted after its execution.
+
+```java
+/**
+ * Notifies that the call message has been executed.
+ *
+ * @param _reqId The request id for the call message
+ * @param _code The execution result code
+ *              (0: Success, -1: Unknown generic failure, >=1: User defined error code)
+ * @param _msg The result message if any
+ */
+@EventLog(indexed=1)
+void CallExecuted(BigInteger _reqId, int _code, String _msg);
+```
 
 ### Error Handling
 
@@ -129,22 +168,40 @@ the destination chain).  However, there might be some error situations such as t
 has failed on the destination chain. In this case, we need to notify the user on the source chain to rollback to the state
 before the call request.
 
-#### RollbackMessage
-
 If a DApp needs to handle a rollback operation, it would fill some data in the last `_rollback` parameter of the `sendCallMessage`,
 otherwise it would have a null value which indicates no rollback handling is required.
-When an error occurs and the `_rollback` is not null, `xcall` emits the following event for notifying the user on the source chain.
+
+#### ResponseMessage
+
+For all two-way messages (i.e., `_rollback` is non-null), the `xcall` on the source chain receives a response message
+from the `xcall` on the destination chain and emits the following event regardless of its success or not.
+
+```java
+/**
+ * Notifies that a response message has arrived for the `_sn` if the request was a two-way message.
+ *
+ * @param _sn The serial number of the previous request
+ * @param _code The response code
+ *              (0: Success, -1: Unknown generic failure, >=1: User defined error code)
+ * @param _msg The result message if any
+ */
+@EventLog(indexed=1)
+void ResponseMessage(BigInteger _sn, int _code, String _msg);
+```
+
+#### RollbackMessage
+
+When an error occurred on the destination chain and the `_rollback` is non-null, `xcall` on the source chain emits the following event
+for notifying the user that an additional rollback operation is required.
 
 ```java
 /**
  * Notifies the user that a rollback operation is required for the request '_sn'.
  *
  * @param _sn The serial number of the previous request
- * @param _rollback The data for recovering that was given by the caller
- * @param _reason The error message that caused this rollback
  */
 @EventLog(indexed=1)
-void RollbackMessage(BigInteger _sn, byte[] _rollback, String _reason);
+void RollbackMessage(BigInteger _sn);
 ```
 
 #### executeRollback
@@ -165,6 +222,24 @@ void executeRollback(BigInteger _sn);
 
 Then the `xcall` invokes the `handleCallMessage` in the source DApp with the given `_rollback` data.
 At this time, the `_from` would be the BTP address of `xcall`.
+
+#### RollbackExecuted
+
+As with the `CallExecuted` event above, the following event is emitted after the DApp's `handleCallMessage` execution
+to notify its execution result.
+
+```java
+/**
+ * Notifies that the rollback has been executed.
+ *
+ * @param _sn The serial number for the rollback
+ * @param _code The execution result code
+ *              (0: Success, -1: Unknown generic failure, >=1: User defined error code)
+ * @param _msg The result message if any
+ */
+@EventLog(indexed=1)
+void RollbackExecuted(BigInteger _sn, int _code, String _msg);
+```
 
 ### Fees Handling
 
