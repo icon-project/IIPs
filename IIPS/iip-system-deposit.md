@@ -1,8 +1,8 @@
 ---
-iip: <to be assigned>
+iip: 59
 title: ICON System Deposit
 author: MoonKyu Song (@mksong-icon)
-discussions-to: <email address>
+discussions-to: https://github.com/icon-project/IIPs/discussions/65
 status: Draft
 type: Standards Track
 category: Core
