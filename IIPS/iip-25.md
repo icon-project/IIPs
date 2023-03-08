@@ -552,10 +552,10 @@ def getStatus(self, _link: str) -> dict:
 
 ###### Message
 ```python
-@eventlog(indexed=1)
+@eventlog(indexed=2)
 def Message(self, _next: str, _seq: int, _msg: bytes):
 ```
-* Indexed: 1
+* Indexed: 2
 * Params
   - _next: String ( BTP Address of the BMC to handle the message )
   - _seq: Integer ( sequence number of the message from current BMC to the next )
