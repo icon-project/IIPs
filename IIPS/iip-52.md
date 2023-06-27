@@ -318,7 +318,8 @@ Address getProtocolFeeHandler();
 ```
 
 ## Implementation
-* [The RI of the `xcall` between ICON to ICON](https://github.com/icon-project/btp/tree/iconloop-v2/javascore/xcall)
+* [The RI of the `xcall` in Java](https://github.com/icon-project/btp2-java/tree/main/xcall)
+* [The RI of the `xcall` in Solidity](https://github.com/icon-project/btp2-solidity/tree/main/xcall)
 
 ## References
 * [ICON BTP Standard](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-25.md)
