@@ -103,23 +103,30 @@ When the `xcall` on the destination chain receives the call request through BMC,
  * @param _to A string representation of the callee address
  * @param _sn The serial number of the request from the source
  * @param _reqId The request id of the destination chain
+ * @param _data The calldata
  */
 @EventLog(indexed=3)
-void CallMessage(String _from, String _to, BigInteger _sn, BigInteger _reqId);
+void CallMessage(String _from, String _to, BigInteger _sn, BigInteger _reqId, byte[] _data);
 ```
+
+To minimize the gas cost, the calldata payload delivered from the source chain are exported to event, `_data` field,
+instead of storing it in the state db.
+The `_data` payload should be repopulated by the user (or client) when calling the following `executeCall` method.
+Then `xcall` compares it with the saved hash value to validate its integrity.
 
 #### executeCall
 
-The user on the destination chain recognizes the call request and invokes the following method on `xcall` with the given `_reqId`.
+The user on the destination chain recognizes the call request and invokes the following method on `xcall` with the given `_reqId` and `_data`.
 
 ```java
 /**
  * Executes the requested call message.
  *
- * @param _reqId The request Id
+ * @param _reqId The request id
+ * @param _data The calldata
  */
 @External
-void executeCall(BigInteger _reqId);
+void executeCall(BigInteger _reqId, byte[] _data);
 ```
 
 #### handleCallMessage
@@ -311,7 +318,8 @@ Address getProtocolFeeHandler();
 ```
 
 ## Implementation
-* [The RI of the `xcall` between ICON to ICON](https://github.com/icon-project/btp/tree/iconloop-v2/javascore/xcall)
+* [The RI of the `xcall` in Java](https://github.com/icon-project/btp2-java/tree/main/xcall)
+* [The RI of the `xcall` in Solidity](https://github.com/icon-project/btp2-solidity/tree/main/xcall)
 
 ## References
 * [ICON BTP Standard](https://github.com/icon-project/IIPs/blob/master/IIPS/iip-25.md)
