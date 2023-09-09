@@ -35,6 +35,59 @@ Additionally there is a new tracked variable "Network ID" that must be configure
 ### Methods
 Below are included the methods and relevant changes applied against the existing IRC-2 token standard.
 
+#### getXCallContract
+The SCORE will be required to track the XCall contract address on the ICON blockchain network to verify the source of cross chain communications passed to its handleCallMessage implementation.
+```java
+/**
+ * Get the configured XCall Contract
+ */
+@External(readonly = true)
+public Address getXCallContract()
+```
+
+
+#### setXCallContract
+Similarly, the XCall contract needs to be managed. This should only be allowed to be updated by the SCORE owner.
+```java
+/**
+* Sets the network ID for this score
+* Required to support all local Network Address references
+* Can only be set by the SCORE owner
+* Must be a contract address
+* 
+* @param _value: the contract address
+*/
+@External
+public void setXCallContract(Address _value)
+```
+
+
+
+#### getNetworkID
+The contract will need to track and manage its own network ID configuration. This is the BTP network ID assigned to the network the SCORE is installed on. As an example the Berlin Test Network would be "0x7.icon", while the ICON main net would be "0x1.icon". This is required to support legacy IRC-31 interface methods and converting "Address" to the new "NetworkAddress" type.
+```java
+/**
+* Get the configured network ID for this SCORE
+*/
+@External(readonly = true)
+public String getNetworkID()
+```
+
+
+
+#### setNetworkID
+```java
+/**
+* Sets the network ID for this score
+* Required to support all local Network Address references
+* Can only be set by the SCORE owner
+* 
+* @param _value: the network ID value
+*/
+@External
+public void setNetworkID(String _value)
+```
+
 #### balanceOf
 ```java
 /**
@@ -45,6 +98,8 @@ Below are included the methods and relevant changes applied against the existing
 @External(readonly = true)
 public BigInteger balanceOf(Address _owner)
 ```
+
+
 
 #### x_balanceOf
 ```java
@@ -58,6 +113,8 @@ public BigInteger balanceOf(Address _owner)
 @External(readonly = true)
 public BigInteger x_balanceOf(String _owner)
 ```
+
+
 
 #### transfer
 The standard IRC-2 implementation of the transfer method with the exception that it should 
@@ -73,6 +130,8 @@ Transfers `_value` amount of tokens to address `_to`, and MUST fire the `Transfe
 @External(readonly = true)
 public void transfer(Address _to, BigInteger _value, @Optional byte[] _data)
 ```
+
+
 
 #### x_transfer
 The XCall compatible implementation of the transfer function that accepts a string in the local network format, Network Address format or BTP format. All other requirements and implementations of the original transfer method should remain intact.
@@ -120,6 +179,7 @@ The handleCallMessage method must be implemented to allow external networks to a
 @External
 public void handleCallMessage(String _from, byte[] _data)
 ```
+
 
 ### Network Address Implementation
 
