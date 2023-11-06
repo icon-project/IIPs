@@ -767,7 +767,7 @@ def getReward(self, _network: str, _addr: Address) -> int:
 ```
 * Params
   - network: String ( Network Address of the reward )
-  - addr: Address ( Address of the relay )
+  - addr: Address ( Address of the relay in the target network )
 * Description
   - Get accrued reward amount of the network for the relay
 * Returns
@@ -778,15 +778,16 @@ def getReward(self, _network: str, _addr: Address) -> int:
 ###### ClaimReward event
 ```python
 @eventlog(indexed=2)
-ClaimReward(self, _sender: Address, _network: str, _amount: int, _nsn: int):
+ClaimReward(self, _sender: Address, _network: str, _receiver: str, _amount: int, _nsn: int):
 ```
 * Params
   - sender: Address ( Claiming requestor )
   - network: String ( Network Address for the reward )
+  - receiver: String ( Address of the receiver in the target network  )
+  - amount: Integer ( Amount of reward to be claimed )
   - nsn: Integer ( Network Serial Number for the request )
 * Description
-  - It's generated when it succeeds to send claiming request to the 
-* Event
+  - It's generated when it succeeds to send claiming request to the network
 
 ###### ClaimRewardResult event
 ```python
